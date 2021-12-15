@@ -21,6 +21,8 @@ export const theme = extendTheme({
         padding: "0",
         boxSizing: "border-box",
         fontFamily: "Poppins",
+        overflowX: "hidden",
+        backgroundColor: 'bg-white'
       },
       a: {
         textDecoration: "none",

@@ -12,7 +12,6 @@ export function Header() {
             backgroundColor='black'
             color='yellow'
             height='64px'
-            position='fixed'
             width='100vw'
         >
             <Logo />
