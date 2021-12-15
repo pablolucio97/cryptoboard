@@ -25,6 +25,7 @@ export const theme = extendTheme({
       a: {
         textDecoration: "none",
         fontFamily: "Poppins",
+        color: "gray",
       },
     },
   },
