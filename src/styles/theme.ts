@@ -28,6 +28,7 @@ export const theme = extendTheme({
         textDecoration: "none",
         fontFamily: "Poppins",
         color: "gray",
+        cursor: "pointer"
       },
     },
   },
