@@ -8,10 +8,12 @@ type TitleProps = {
 export function Title({ content, size }: TitleProps) {
     return (
         <Text
-            fontSize={size === 'tiny' ? '.92rem' : '1.48rem'}
+            fontSize={size === 'tiny' ? '.72rem' : '1.48rem'}
             color='black'
             fontWeight='800'
             marginBottom='-12px'
+            textAlign='center'
+            width={size === 'tiny' ? '72px' : null}
         >
             {content}
         </Text>

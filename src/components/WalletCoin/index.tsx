@@ -1,10 +1,10 @@
-import { Flex, Text } from "@chakra-ui/react";
+import { Flex, Text } from '@chakra-ui/react'
 
-export function DailyCoin() {
+export function WalletCoin() {
     return (
         <Flex
             display='flex'
-            justify='space-around'
+            justify='space-evenly'
             alignItems='center'
             width="96%"
             padding=".24rem"
@@ -21,35 +21,46 @@ export function DailyCoin() {
                 marginLeft="-12px"
                 fontWeight='bold'
                 fontSize=".88rem"
-            >
+                >
                 Bitcoin
             </Text>
             <Text
                 fontSize=".88rem"
             >
-                $48,356.43
+                0,002313
             </Text>
             <Text
-                color='red'
                 fontSize=".88rem"
             >
-                -0.23%
+                $48,356
+            </Text>
+            <Text
+                fontSize=".88rem"
+            >
+                $62,878
+            </Text>
+            <Text
+                fontSize=".88rem"
+            >
+                12/12/2021
+
+            </Text>
+            <Text
+                fontSize=".88rem"
+            >
+                $55
             </Text>
             <Text
                 color='green'
                 fontSize=".88rem"
             >
-                +0.11%
+                $61
             </Text>
             <Text
+                color='green'
                 fontSize=".88rem"
             >
-                18,897,868
-            </Text>
-            <Text
-                fontSize=".88rem"
-            >
-                $916,649,339,413
+                +12.04%
             </Text>
         </Flex>
     )

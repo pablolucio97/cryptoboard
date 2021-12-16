@@ -1,4 +1,4 @@
-import { Flex, HStack, VStack } from '@chakra-ui/react';
+import { Flex, HStack, VStack, Text } from '@chakra-ui/react';
 import Head from "next/head";
 import React from "react";
 import { DailyCoin } from '../components/DailyCoin';
@@ -59,38 +59,59 @@ export default function Home() {
             <HStack
               display="flex"
               alignItems="center"
-              justifyContent="space-around"
+              justifyContent="space-evenly"
               width="100%"
-              paddingRight="4rem"
             >
-              <Title
-                content=""
-                size='tiny'
-              />
-              <Title
-                content="Moeda"
-                size='tiny'
-              />
-              <Title
-                content="Valor"
-                size='tiny'
-              />
-              <Title
-                content="24h"
-                size='tiny'
-              />
-              <Title
-                content="7d"
-                size='tiny'
-              />
-              <Title
-                content="Supply"
-                size='tiny'
-              />
-              <Title
-                content="MarketCap"
-                size='tiny'
-              />
+              <Text
+                color='black'
+                fontWeight='800'
+                textAlign='center'
+                fontSize='.88rem'
+                marginLeft='2.48rem'
+              >
+                Moeda
+              </Text>
+              <Text
+                color='black'
+                fontWeight='800'
+                textAlign='center'
+                fontSize='.88rem'
+              >
+                Valor
+              </Text>
+              <Text
+                color='black'
+                fontWeight='800'
+                textAlign='center'
+                fontSize='.88rem'
+              >
+                24h
+              </Text>
+              <Text
+                color='black'
+                fontWeight='800'
+                textAlign='center'
+                fontSize='.88rem'
+              >
+                7d
+              </Text>
+              <Text
+                color='black'
+                fontWeight='800'
+                textAlign='center'
+                fontSize='.88rem'
+                marginLeft='3rem'
+              >
+                Supply
+              </Text>
+              <Text
+                color='black'
+                fontWeight='800'
+                textAlign='center'
+                fontSize='.88rem'
+              >
+                MarketCap
+              </Text>
             </HStack>
             <DailyCoin />
             <DailyCoin />
