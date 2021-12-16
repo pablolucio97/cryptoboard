@@ -30,6 +30,14 @@ export const theme = extendTheme({
         color: "gray",
         cursor: "pointer"
       },
+      button: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        cursor: 'pointer',
+        border: 'none',
+        outline: 'none'
+      }
     },
   },
 });
