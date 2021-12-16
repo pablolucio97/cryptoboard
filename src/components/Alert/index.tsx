@@ -10,7 +10,7 @@ export function Alert() {
             justifyContent='space-evenly'
             width="720px"
             bg='white'
-            padding='1rem'
+            padding='.32rem'
         >
             <VStack
                 display='flex'

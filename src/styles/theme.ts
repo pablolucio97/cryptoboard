@@ -37,7 +37,7 @@ export const theme = extendTheme({
         cursor: 'pointer',
         border: 'none',
         outline: 'none'
-      }
+      }      
     },
   },
 });

@@ -48,7 +48,7 @@ export default function Wallet() {
     return (
         <>
             <Head>
-                <title>CryptoBoard | Mercado</title>
+                <title>CryptoBoard | Carteira</title>
             </Head>
             <Flex
                 display="flex"
