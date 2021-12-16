@@ -12,7 +12,7 @@ export const theme = extendTheme({
     white: "#FFFFFF",
     "bg-white": "#F6F4F4",
     red: "#FF7171",
-    green: "#71ff71",
+    green: "#008000",
   },
   styles: {
     global: {
