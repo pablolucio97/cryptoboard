@@ -1,9 +1,17 @@
 import { HStack, Text, VStack } from "@chakra-ui/react";
 import Switch from 'react-switch'
 
+type AlarmProps = {
+    coin: string;
+    targetValue: number;
+    isActive: boolean;
+    alterAlarmStatus?: () => void;
+    removeAlarm?: () => void;
+}
+
 import { SecondaryButton } from '../SecondaryButton'
 
-export function Alert() {
+export function Alert({ coin, targetValue, isActive, removeAlarm, alterAlarmStatus }: AlarmProps) {
     return (
         <HStack
             display='flex'
@@ -22,27 +30,12 @@ export function Alert() {
                 <Text
                     fontSize='.88rem'
                     fontWeight='bold'
-                >Moeda
+                >{coin}
                 </Text>
                 <Text
                     fontSize='.88rem'
-                >Bitcoin
-                </Text>
-            </VStack>
-            <VStack
-                display='flex'
-                flexDirection='column'
-                alignItems='center'
-                justifyContent='center'
-            >
-                <Text
-                    fontSize='.88rem'
-                    fontWeight='bold'
-                >Valor alvo
-                </Text>
-                <Text
-                    fontSize='.88rem'
-                >$7,543
+                >
+                    {coin}
                 </Text>
             </VStack>
             <VStack
@@ -54,18 +47,40 @@ export function Alert() {
                 <Text
                     fontSize='.88rem'
                     fontWeight='bold'
-                >Status do alarme</Text>
+                >
+                    Valor alvo
+                </Text>
                 <Text
                     fontSize='.88rem'
-                >Ativo</Text>
+                >
+                    {targetValue}
+                </Text>
+            </VStack>
+            <VStack
+                display='flex'
+                flexDirection='column'
+                alignItems='center'
+                justifyContent='center'
+            >
+                <Text
+                    fontSize='.88rem'
+                    fontWeight='bold'
+                >
+                    Status do alarme
+                </Text>
+                <Text
+                    fontSize='.88rem'
+                >
+                    {isActive? 'Ativado' : 'Desativado'}
+                </Text>
             </VStack>
             <Switch
-                checked={false}
-                onChange={() => { }}
+                checked={isActive}
+                onChange={alterAlarmStatus}
             />
             <SecondaryButton
                 label='Remover alarme'
-                action={() => { }}
+                action={removeAlarm}
             />
         </HStack>
     )

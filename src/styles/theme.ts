@@ -37,6 +37,13 @@ export const theme = extendTheme({
         cursor: 'pointer',
         border: 'none',
         outline: 'none'
+      },
+      input:{
+        padding: ".4rem",
+        height: '22px',
+        borderRadius: "4px",
+        border: '1px solid black',
+        outline: 'none'
       }      
     },
   },
