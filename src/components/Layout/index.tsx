@@ -5,10 +5,13 @@ import { Header } from "../Header";
 import { Footer } from "../Footer";
 import { Menu } from '../Menu'
 import { UserCard } from '../UserCard'
+import { GoogleSignInButton } from '../GoogleSignButton'
 import { useSession, signIn } from 'next-auth/client'
 import { PrimaryButton } from "../PrimaryButton";
 import Modal from 'react-modal'
 import styles from '../../styles/modalStyles.module.scss'
+import { SecondaryButton } from "../SecondaryButton";
+import { FacebookSignInButton } from "../FacebookSignInButton";
 
 
 type LayoutProps = {
@@ -21,11 +24,11 @@ export function Layout({ children }: LayoutProps) {
 
     const [loginModalIsOpen, setLoginModalIsOpen] = useState(false)
 
-    function openLoginModal(){
+    function openLoginModal() {
         setLoginModalIsOpen(true)
     }
 
-    function closeLoginModal(){
+    function closeLoginModal() {
         setLoginModalIsOpen(false)
     }
 
@@ -68,9 +71,16 @@ export function Layout({ children }: LayoutProps) {
             >
                 <strong>Login</strong>
                 <Text>Escolha uma conta para fazer login</Text>
-                <button onClick={() => signIn('google')}>Google</button>
-                <button onClick={() => signIn('facebook')}>Facebook</button>
-                <button onClick={closeLoginModal}>Fechar</button>
+                <GoogleSignInButton
+                    action={() => signIn('google')}
+                />
+                <FacebookSignInButton
+                    action={() => signIn('facebook')}
+                />
+                <SecondaryButton
+                    action={() => closeLoginModal()}
+                    label="Cancelar"
+                />
             </Modal>
             <Footer />
         </VStack>
