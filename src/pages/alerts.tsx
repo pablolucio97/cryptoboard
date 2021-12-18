@@ -1,20 +1,24 @@
 import {
-    Flex, HStack, NumberDecrementStepper,
-    NumberIncrementStepper,
-    NumberInput,
-    NumberInputField,
-    NumberInputStepper, Select, Text, VStack
+    Box,
+    Flex,
+    HStack,
+    Select,
+    Text,
+    VStack
+
 } from '@chakra-ui/react'
 import { GetStaticProps } from 'next'
 import Head from 'next/head'
 import React, { FormEvent, useEffect, useState } from 'react'
 import Modal from 'react-modal'
 import { Alert } from '../components/Alert'
+import { UserCard } from '../components/UserCard'
 import { PrimaryButton } from '../components/PrimaryButton'
 import { SecondaryButton } from '../components/SecondaryButton'
 import { SubTitle } from '../components/SubTitle'
 import { Title } from '../components/Title'
 import styles from '../styles/modalStyles.module.scss'
+import { useSession, signIn } from 'next-auth/client'
 
 
 type CoinsProps = {
@@ -32,6 +36,8 @@ type AlarmProps = {
 
 export default function Alerts({ returnedCoins }) {
 
+
+    const [session] = useSession()
 
     const [newAlarmModalOpen, setNewAlarmModalOpen] = useState(false)
     const [coins, setCoins] = useState<CoinsProps[]>([])
@@ -73,25 +79,25 @@ export default function Alerts({ returnedCoins }) {
         closeModal()
     }
 
-    function alterAlarmStatus(coin){
-        const disabledAlarms = alarms.map(alarm => 
+    function alterAlarmStatus(coin) {
+        const disabledAlarms = alarms.map(alarm =>
             alarm.coin === coin ?
-            {
-                ...alarms,
-                coin: alarm.coin,
-                targetValue: alarm.targetValue,
-                isActive: !alarm.isActive
-            }
-            :
-            alarm
+                {
+                    ...alarms,
+                    coin: alarm.coin,
+                    targetValue: alarm.targetValue,
+                    isActive: !alarm.isActive
+                }
+                :
+                alarm
         )
         setAlarms(disabledAlarms)
     }
 
 
-    function removeAlarm(coin){
+    function removeAlarm(coin) {
         const filteredAlarms = alarms.filter(alarm => alarm.coin !== coin)
-        setAlarms(filteredAlarms) 
+        setAlarms(filteredAlarms)
     }
 
 
@@ -110,6 +116,8 @@ export default function Alerts({ returnedCoins }) {
                 alignItems='center'
                 padding='0 4rem'
             >
+           
+                
                 <VStack
                     display="flex"
                     flexDirection='column'
@@ -121,15 +129,30 @@ export default function Alerts({ returnedCoins }) {
                     <SubTitle
                         content='Meus alertas'
                     />
-                {alarms.map(alarm => (
-                    <Alert 
-                        coin={alarm.coin}
-                        targetValue={alarm.targetValue}
-                        isActive={alarm.isActive}
-                        alterAlarmStatus={() => alterAlarmStatus(alarm.coin)}
-                        removeAlarm={() => removeAlarm(alarm.coin)}
-                    />
-                ))}
+                    {alarms.length > 0 ?
+                        alarms.map(alarm => (
+                            <Alert
+                                coin={alarm.coin}
+                                targetValue={alarm.targetValue}
+                                isActive={alarm.isActive}
+                                alterAlarmStatus={() => alterAlarmStatus(alarm.coin)}
+                                removeAlarm={() => removeAlarm(alarm.coin)}
+                            />
+                        )) :
+                        <Box
+                            display="flex"
+                            justifyContent='center'
+                            alignItems='center'
+                            width="900px"
+                            height="300px"
+                            bg='white'
+                            padding='1rem'
+                        >
+                            <SubTitle
+                                content='Você ainda não adicionou nenhum alarme'
+                            />
+                        </Box>
+                    }
                 </VStack>
                 <VStack
                     display="flex"

@@ -1,8 +1,14 @@
 import { Flex, Text, HStack } from '@chakra-ui/react'
 import { MdTimeline, MdAttachMoney, MdAddAlert } from 'react-icons/md'
 import Link from 'next/link'
+import { ReactNode } from 'react'
 
-export function Menu() {
+
+type MenuProps = {
+    children?: ReactNode;
+}
+
+export function Menu({ children }: MenuProps) {
     return (
         <Flex
             display='flex'
@@ -11,6 +17,7 @@ export function Menu() {
             bg='white'
             height='70vh'
         >
+            {children}
             <Text
                 fontWeight='700'
                 fontSize='24'

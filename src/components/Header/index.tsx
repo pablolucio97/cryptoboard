@@ -1,8 +1,6 @@
-import "@fontsource/poppins";
-
-import React from "react";
-
 import { Flex } from "@chakra-ui/react";
+import "@fontsource/poppins";
+import React, { ReactNode } from "react";
 import { Logo } from "../Logo";
 
 export function Header() {

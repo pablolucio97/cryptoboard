@@ -4,9 +4,10 @@ type ButtonProps = {
     label: string;
     action: () => void;
     type: 'submit' | 'button';
+    size?: 'xs' | 'lg' | 'md' | 'sm'
 }
 
-export function PrimaryButton({ action, label, type }: ButtonProps) {
+export function PrimaryButton({ action, label, type, size }: ButtonProps) {
     return (
         <Button
             onClick={action}
