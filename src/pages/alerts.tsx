@@ -18,13 +18,14 @@ import { SecondaryButton } from '../components/SecondaryButton'
 import { SubTitle } from '../components/SubTitle'
 import { Title } from '../components/Title'
 import styles from '../styles/modalStyles.module.scss'
-import { useSession, signIn } from 'next-auth/client'
+import { useSession } from 'next-auth/client'
+
 
 
 type CoinsProps = {
-    id: string;
+    id: number;
     symbol?: string;
-    current_price?: number;
+    price?: number;
 }
 
 type AlarmProps = {
@@ -64,7 +65,7 @@ export default function Alerts({ returnedCoins }) {
         if (coinSymbol === 'Select') {
             return
         }
-        const currentValue = coins.filter(coin => coin.symbol === coinSymbol)[0].current_price
+        const currentValue = coins.filter(coin => coin.symbol === coinSymbol)[0].price
         setSelectedCoinCurrentValue(currentValue)
     }
 
@@ -100,7 +101,6 @@ export default function Alerts({ returnedCoins }) {
         setAlarms(filteredAlarms)
     }
 
-
     return (
         <>
             <Head>
@@ -116,8 +116,6 @@ export default function Alerts({ returnedCoins }) {
                 alignItems='center'
                 padding='0 4rem'
             >
-           
-                
                 <VStack
                     display="flex"
                     flexDirection='column'
@@ -129,29 +127,47 @@ export default function Alerts({ returnedCoins }) {
                     <SubTitle
                         content='Meus alertas'
                     />
-                    {alarms.length > 0 ?
-                        alarms.map(alarm => (
-                            <Alert
-                                coin={alarm.coin}
-                                targetValue={alarm.targetValue}
-                                isActive={alarm.isActive}
-                                alterAlarmStatus={() => alterAlarmStatus(alarm.coin)}
-                                removeAlarm={() => removeAlarm(alarm.coin)}
-                            />
-                        )) :
-                        <Box
-                            display="flex"
-                            justifyContent='center'
-                            alignItems='center'
-                            width="900px"
-                            height="300px"
-                            bg='white'
-                            padding='1rem'
-                        >
-                            <SubTitle
-                                content='Você ainda não adicionou nenhum alarme'
-                            />
-                        </Box>
+                    {
+                        session ?
+
+                            alarms.length > 0 ?
+                                alarms.map(alarm => (
+                                    <Alert
+                                        coin={alarm.coin}
+                                        targetValue={alarm.targetValue}
+                                        isActive={alarm.isActive}
+                                        alterAlarmStatus={() => alterAlarmStatus(alarm.coin)}
+                                        removeAlarm={() => removeAlarm(alarm.coin)}
+                                    />
+                                )) :
+                                <Box
+                                    display="flex"
+                                    justifyContent='center'
+                                    alignItems='center'
+                                    width="900px"
+                                    height="300px"
+                                    bg='white'
+                                    padding='1rem'
+                                >
+                                    <SubTitle
+                                        content='Você ainda não adicionou nenhum alarme'
+                                    />
+                                </Box>
+                            :
+                            <Box
+                                display="flex"
+                                justifyContent='center'
+                                alignItems='center'
+                                width="900px"
+                                height="300px"
+                                bg='white'
+                                padding='1rem'
+                            >
+                                <SubTitle
+                                    content='Faça login para criar alarmes'
+                                />
+                            </Box>
+
                     }
                 </VStack>
                 <VStack
@@ -171,6 +187,7 @@ export default function Alerts({ returnedCoins }) {
                         label='Novo alerta'
                         action={openModal}
                         type='button'
+                        disabled={!session}
                     />
                 </VStack>
             </Flex>
@@ -225,21 +242,32 @@ export default function Alerts({ returnedCoins }) {
 
 export const getStaticProps: GetStaticProps = async () => {
 
-    const data = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=eth&order=market_cap_desc&per_page=200&page=1&sparkline=false')
-    const response = await data.json()
-    const returnedCoins: CoinsProps[] = response.map(coin => {
+    const headers = {
+        'x-rapidapi-host': 'coinranking1.p.rapidapi.com',
+        'x-rapidapi-key': process.env.RAPID_API_KEY,
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json'
+    }
+
+    const response = await fetch('https://coinranking1.p.rapidapi.com/coins', {
+        headers
+    })
+
+    const { data } = await response.json()
+    const coins = data.coins
+
+    const returnedCoins = coins.map(coin => {
         return {
             id: coin.id,
             symbol: coin.symbol.toUpperCase(),
-            current_price: Intl.NumberFormat('en-US', {
+            price: Intl.NumberFormat('en-US', {
                 currency: 'USD',
                 style: 'currency',
-                maximumFractionDigits: 8,
-                minimumFractionDigits: 6,
-                minimumSignificantDigits: 6
-            }).format(coin.current_price)
+                maximumFractionDigits: coin.price >= 1 ?  2 : 6,
+            }).format(coin.price)
         }
     })
+
     return {
         props: {
             returnedCoins
