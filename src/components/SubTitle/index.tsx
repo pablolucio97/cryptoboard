@@ -9,7 +9,6 @@ export function SubTitle({ content }: SubTitleProps) {
         <Text
             fontSize='1rem'
             color='gray'
-            fontWeight='300'
         >
             {content}
         </Text>

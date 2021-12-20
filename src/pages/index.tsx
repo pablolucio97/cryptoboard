@@ -1,7 +1,7 @@
 import { Flex, HStack, VStack, Text } from '@chakra-ui/react';
-import { GetServerSideProps } from 'next';
+import { GetStaticProps } from 'next';
 import Head from "next/head";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { DailyCoin } from '../components/DailyCoin';
 import { SubTitle } from '../components/SubTitle';
 import { Title } from '../components/Title';
@@ -21,16 +21,32 @@ type CoinProps = {
   marketCap?: number;
 }
 
-export default function Home({returnedCoins}) {
+export default function Home({ returnedCoins }) {
 
-  const sortCoinsByMarketCap = returnedCoins.sort((minMarketCap, maxMarketCap) => {
-    if(minMarketCap.marketCap < maxMarketCap.marketCap) return 1
-    if(minMarketCap.marketCap > maxMarketCap.marketCap) return -1
-    else return 0
-  })
+  const sortCoinsByMarketCap = useMemo(() => {
+    const coins = returnedCoins.sort((minMarketCap, maxMarketCap) => {
+      if (minMarketCap.marketCap < maxMarketCap.marketCap) return 1
+      if (minMarketCap.marketCap > maxMarketCap.marketCap) return -1
+      else return 0
+    }).slice(0, 3)
+    return coins
+  }, [])
 
-  const [topCoins, setTopCoins] = useState<CoinProps[]>(sortCoinsByMarketCap.slice(0,3))
- 
+  const sortCoinsByRanking = useMemo(() => {
+    const coins = returnedCoins.sort((minRanking, maxRanking) => {
+      if (minRanking.rank < maxRanking.rank) return -1
+      if (minRanking.rank > maxRanking.rank) return 1
+      else return 0
+    })
+    return coins
+  }, [])
+
+  const [topCoins, setTopCoins] = useState<CoinProps[]>(sortCoinsByMarketCap)
+  const [dailyCoins, setDailyCoins] = useState<CoinProps[]>(sortCoinsByRanking)
+  
+
+
+
   return (
     <>
       <Head>
@@ -58,14 +74,15 @@ export default function Home({returnedCoins}) {
             content="Moedas com maior volume de negociação diária nas últimas 24h"
           />
           <HStack>
-              {topCoins.map(coin => (
-                <TopCoin
-                  id={coin.id}
-                  name={coin.name}
-                  symbol={coin.symbol}
-                  iconUrl={coin.iconUrl}
-                />
-              ))}
+            {topCoins.map(coin => (
+              <TopCoin
+                id={coin.id}
+                name={coin.name}
+                symbol={coin.symbol}
+                iconUrl={coin.iconUrl}
+                price={coin.price}
+              />
+            ))}
           </HStack>
         </VStack>
         <VStack
@@ -87,7 +104,7 @@ export default function Home({returnedCoins}) {
             <HStack
               display="flex"
               alignItems="center"
-              justifyContent="space-evenly"
+              justifyContent="flex-start"
               width="100%"
             >
               <Text
@@ -95,7 +112,8 @@ export default function Home({returnedCoins}) {
                 fontWeight='800'
                 textAlign='center'
                 fontSize='.88rem'
-                marginLeft='2.48rem'
+                marginRight='2rem'
+                width='240px'
               >
                 Moeda
               </Text>
@@ -104,6 +122,7 @@ export default function Home({returnedCoins}) {
                 fontWeight='800'
                 textAlign='center'
                 fontSize='.88rem'
+                width='120px'
               >
                 Valor
               </Text>
@@ -112,23 +131,7 @@ export default function Home({returnedCoins}) {
                 fontWeight='800'
                 textAlign='center'
                 fontSize='.88rem'
-              >
-                24h
-              </Text>
-              <Text
-                color='black'
-                fontWeight='800'
-                textAlign='center'
-                fontSize='.88rem'
-              >
-                7d
-              </Text>
-              <Text
-                color='black'
-                fontWeight='800'
-                textAlign='center'
-                fontSize='.88rem'
-                marginLeft='3rem'
+                width='240px'
               >
                 Supply
               </Text>
@@ -136,33 +139,24 @@ export default function Home({returnedCoins}) {
                 color='black'
                 fontWeight='800'
                 textAlign='center'
+                width='240px'
                 fontSize='.88rem'
               >
                 MarketCap
               </Text>
             </HStack>
-            <DailyCoin />
-            <DailyCoin />
-            <DailyCoin />
-            <DailyCoin />
-            <DailyCoin />
-            <DailyCoin />
-            <DailyCoin />
-            <DailyCoin />
-            <DailyCoin />
-            <DailyCoin />
-            <DailyCoin />
-            <DailyCoin />
-            <DailyCoin />
-            <DailyCoin />
-            <DailyCoin />
-            <DailyCoin />
-            <DailyCoin />
-            <DailyCoin />
-            <DailyCoin />
-            <DailyCoin />
-            <DailyCoin />
-            <DailyCoin />
+            {dailyCoins.map(coin => (
+              <DailyCoin
+                id={coin.id}
+                name={coin.name}
+                symbol={coin.symbol}
+                circulatingSupply={coin.circulatingSupply}
+                marketCap={coin.marketCap}
+                iconUrl={coin.iconUrl}
+                price={coin.price}
+              />
+            ))}
+
           </VStack>
         </VStack>
       </Flex>
@@ -170,7 +164,7 @@ export default function Home({returnedCoins}) {
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
 
   const headers = {
     'x-rapidapi-host': 'coinranking1.p.rapidapi.com',
@@ -192,20 +186,30 @@ export const getServerSideProps: GetServerSideProps = async () => {
       symbol: coin.symbol,
       name: coin.name,
       price: Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
         maximumFractionDigits: coin.price >= 1 ? 2 : 6
       }).format(coin.price),
-      circulatingSupply: coin.circulatingSupply,
+      circulatingSupply: Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        maximumFractionDigits: 2
+      }).format(coin.circulatingSupply),
       volume: coin.volume,
       iconUrl: coin.iconUrl,
       rank: coin.rank,
       history: coin.history,
-      marketCap: coin.marketCap
+      marketCap: Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+      }).format(coin.marketCap),
     }
   })
 
   return {
     props: {
       returnedCoins
-    }
+    },
+    revalidate: 5
   }
 }

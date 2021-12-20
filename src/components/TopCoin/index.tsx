@@ -38,7 +38,12 @@ export function TopCoin({
                 width="24" height="24"
             />
             <Text>{name}</Text>
-            <Text>{symbol}</Text>
+            <Text
+                fontSize='.8rem'
+                fontWeight='bold'
+            >
+                {symbol}
+            </Text>
         </Flex>
     )
 }
