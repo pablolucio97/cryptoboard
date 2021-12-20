@@ -1,8 +1,27 @@
 import { Flex, Text } from "@chakra-ui/react";
 
-export function TopCoin() {
+type TopCoinProps = {
+    id: number;
+    symbol: string;
+    name: string;
+    price?: number
+    circulatingSupply?: number
+    volume?: number;
+    iconUrl?: string;
+    rank?: number;
+    history?: number[];
+}
+
+export function TopCoin({
+    id,
+    symbol,
+    name,
+    history,
+    iconUrl
+}: TopCoinProps) {
     return (
         <Flex
+            key={id}
             display='flex'
             justify='space-around'
             alignItems='center'
@@ -14,12 +33,12 @@ export function TopCoin() {
             box-shadow='rgba(10, 10, 10, 0.1) 0px 8px 16px -2px, rgba(10, 10, 10, 0.02) 0px 0px 0px 1px'
         >
             <img
-                src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/1200px-Bitcoin.svg.png"
+                src={iconUrl}
                 alt="Cryptoboard"
                 width="24" height="24"
             />
-            <Text>Bitcoin</Text>
-            <Text>Btc</Text>
+            <Text>{name}</Text>
+            <Text>{symbol}</Text>
         </Flex>
     )
 }

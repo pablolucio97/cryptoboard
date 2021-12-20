@@ -12,15 +12,12 @@ import Head from 'next/head'
 import React, { FormEvent, useEffect, useState } from 'react'
 import Modal from 'react-modal'
 import { Alert } from '../components/Alert'
-import { UserCard } from '../components/UserCard'
 import { PrimaryButton } from '../components/PrimaryButton'
 import { SecondaryButton } from '../components/SecondaryButton'
 import { SubTitle } from '../components/SubTitle'
 import { Title } from '../components/Title'
 import styles from '../styles/modalStyles.module.scss'
 import { useSession } from 'next-auth/client'
-
-
 
 type CoinsProps = {
     id: number;
