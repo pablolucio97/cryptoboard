@@ -6,6 +6,8 @@ import { DailyCoin } from '../components/DailyCoin';
 import { SubTitle } from '../components/SubTitle';
 import { Title } from '../components/Title';
 import { TopCoin } from '../components/TopCoin';
+import { Pagination } from '../components/Pagination'
+import { useCryptosList, fetchCryptos } from '../hooks/useCryptosList'
 
 
 type CoinProps = {
@@ -23,8 +25,12 @@ type CoinProps = {
 
 export default function Home({ returnedCoins }) {
 
+  const { data, isLoading, isError } = useCryptosList({ initialData: returnedCoins })
+
+
   const sortCoinsByMarketCap = useMemo(() => {
-    const coins = returnedCoins.sort((minMarketCap, maxMarketCap) => {
+    //@ts-ignore
+    const coins = data.sort((minMarketCap, maxMarketCap) => {
       if (minMarketCap.marketCap < maxMarketCap.marketCap) return 1
       if (minMarketCap.marketCap > maxMarketCap.marketCap) return -1
       else return 0
@@ -33,19 +39,17 @@ export default function Home({ returnedCoins }) {
   }, [])
 
   const sortCoinsByRanking = useMemo(() => {
-    const coins = returnedCoins.sort((minRanking, maxRanking) => {
+    //@ts-ignore
+    const coins = data.sort((minRanking, maxRanking) => {
       if (minRanking.rank < maxRanking.rank) return -1
       if (minRanking.rank > maxRanking.rank) return 1
       else return 0
-    })
+    }).slice(0, 10)
     return coins
   }, [])
 
   const [topCoins, setTopCoins] = useState<CoinProps[]>(sortCoinsByMarketCap)
   const [dailyCoins, setDailyCoins] = useState<CoinProps[]>(sortCoinsByRanking)
-  
-
-
 
   return (
     <>
@@ -156,9 +160,13 @@ export default function Home({ returnedCoins }) {
                 price={coin.price}
               />
             ))}
-
           </VStack>
         </VStack>
+            <Pagination 
+              onPageChange={() => {}}
+              totalCountOfRegisters={20}
+              currentPage={1}
+            />
       </Flex>
     </>
   )
@@ -166,45 +174,7 @@ export default function Home({ returnedCoins }) {
 
 export const getStaticProps: GetStaticProps = async () => {
 
-  const headers = {
-    'x-rapidapi-host': 'coinranking1.p.rapidapi.com',
-    'x-rapidapi-key': process.env.RAPID_API_KEY,
-    'Access-Control-Allow-Origin': '*',
-    'Content-Type': 'application/json'
-  }
-
-  const response = await fetch('https://coinranking1.p.rapidapi.com/coins', {
-    headers
-  })
-
-  const data = await response.json()
-  const { coins } = data.data
-
-  const returnedCoins = coins.map(coin => {
-    return {
-      id: coin.id,
-      symbol: coin.symbol,
-      name: coin.name,
-      price: Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-        maximumFractionDigits: coin.price >= 1 ? 2 : 6
-      }).format(coin.price),
-      circulatingSupply: Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-        maximumFractionDigits: 2
-      }).format(coin.circulatingSupply),
-      volume: coin.volume,
-      iconUrl: coin.iconUrl,
-      rank: coin.rank,
-      history: coin.history,
-      marketCap: Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-      }).format(coin.marketCap),
-    }
-  })
+  const returnedCoins = await fetchCryptos()
 
   return {
     props: {
