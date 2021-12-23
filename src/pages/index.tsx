@@ -1,13 +1,12 @@
-import { Flex, HStack, VStack, Text } from '@chakra-ui/react';
+import { Flex, HStack, Text, VStack } from '@chakra-ui/react';
 import { GetStaticProps } from 'next';
 import Head from "next/head";
-import React, { useState, useEffect, useMemo } from "react";
+import React, { memo, useEffect, useMemo, useState } from "react";
 import { DailyCoin } from '../components/DailyCoin';
+import { Pagination } from '../components/Pagination';
 import { SubTitle } from '../components/SubTitle';
 import { Title } from '../components/Title';
 import { TopCoin } from '../components/TopCoin';
-import { Pagination } from '../components/Pagination'
-import { useCryptosList, fetchCryptos } from '../hooks/useCryptosList'
 
 
 type CoinProps = {
@@ -23,33 +22,48 @@ type CoinProps = {
   marketCap?: number;
 }
 
-export default function Home({ returnedCoins }) {
+export default function HomeComponent({ returnedCoins }) {
 
-  const { data, isLoading, isError } = useCryptosList({ initialData: returnedCoins })
-
+  const [page, setPage] = useState(1)
+  const [itemQueryStart, setItemQueryStart] = useState(0)
+  const [itemQueryEnd, setItemQueryEnd] = useState(10)
 
   const sortCoinsByMarketCap = useMemo(() => {
-    //@ts-ignore
-    const coins = data.sort((minMarketCap, maxMarketCap) => {
+    const coins = returnedCoins.sort((minMarketCap, maxMarketCap) => {
       if (minMarketCap.marketCap < maxMarketCap.marketCap) return 1
       if (minMarketCap.marketCap > maxMarketCap.marketCap) return -1
       else return 0
     }).slice(0, 3)
     return coins
   }, [])
-
-  const sortCoinsByRanking = useMemo(() => {
-    //@ts-ignore
-    const coins = data.sort((minRanking, maxRanking) => {
+  
+  const sortCoinsByRanking = () => {
+    pagination()
+    const coins = returnedCoins.sort((minRanking, maxRanking) => {
       if (minRanking.rank < maxRanking.rank) return -1
       if (minRanking.rank > maxRanking.rank) return 1
       else return 0
-    }).slice(0, 10)
+    }).slice(itemQueryStart, itemQueryEnd)
     return coins
-  }, [])
-
+  }
+  const ITEMS_PER_PAGE = 10
+  
   const [topCoins, setTopCoins] = useState<CoinProps[]>(sortCoinsByMarketCap)
   const [dailyCoins, setDailyCoins] = useState<CoinProps[]>(sortCoinsByRanking)
+
+
+  function pagination() {
+    const itemStart = (page - 1) * ITEMS_PER_PAGE
+    const itemEnd = itemStart + ITEMS_PER_PAGE
+    setItemQueryStart(itemStart)
+    setItemQueryEnd(itemEnd)
+  }
+
+  
+  useEffect(() => {
+    setDailyCoins(sortCoinsByRanking)
+  }, [sortCoinsByRanking, dailyCoins, setDailyCoins])
+
 
   return (
     <>
@@ -162,19 +176,62 @@ export default function Home({ returnedCoins }) {
             ))}
           </VStack>
         </VStack>
-            <Pagination 
-              onPageChange={() => {}}
-              totalCountOfRegisters={20}
-              currentPage={1}
-            />
+        <Pagination
+          onPageChange={setPage}
+          totalCountOfRegisters={ITEMS_PER_PAGE}
+          totalCountOfPages={Number(returnedCoins.length / ITEMS_PER_PAGE)}
+          currentPage={page}
+        />
       </Flex>
     </>
   )
 }
 
+export const Home = memo(HomeComponent, (prevProps, nextProps) =>{
+  return Object.is(prevProps.returnedCoins, nextProps.returnedCoins)
+})
+
 export const getStaticProps: GetStaticProps = async () => {
 
-  const returnedCoins = await fetchCryptos()
+  const headers = {
+    "x-rapidapi-host": "coinranking1.p.rapidapi.com",
+    "x-rapidapi-key": process.env.RAPID_API_KEY,
+    "Access-Control-Allow-Origin": "*",
+    "Content-Type": "application/json",
+  };
+
+  const response = await fetch("https://coinranking1.p.rapidapi.com/coins", {
+    headers,
+  });
+  const data = await response.json();
+  const { coins } = data.data;
+
+  const returnedCoins = coins.map((coin) => {
+    return {
+      id: coin.id,
+      symbol: coin.symbol,
+      name: coin.name,
+      price: Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+        maximumFractionDigits: coin.price >= 1 ? 2 : 6,
+      }).format(coin.price),
+      circulatingSupply: Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+        maximumFractionDigits: 2,
+      }).format(coin.circulatingSupply),
+      volume: coin.volume,
+      iconUrl: coin.iconUrl,
+      rank: coin.rank,
+      history: coin.history,
+      marketCap: Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+      }).format(coin.marketCap),
+    };
+  });
+
 
   return {
     props: {

@@ -43,6 +43,6 @@ export  const fetchCryptos = async () => {
   return returnedCoins;
 }
 
-export function useCryptosList(options?: UseQueryOptions) {
-  return useQuery("cryptos-list", () => fetchCryptos(), { ...options });
+export function useCryptosList(options?: UseQueryOptions, page?: number) {
+  return useQuery(["cryptos-list", page], () => fetchCryptos(), { ...options, });
 }

@@ -3,6 +3,7 @@ import React from "react";
 import {PaginationItem} from "./PaginationItem";
 
 interface PaginationProps {
+    totalCountOfPages: number;
     totalCountOfRegisters: number;
     registersPerPage?: number;
     currentPage?: number;
@@ -13,11 +14,12 @@ export function Pagination({
     currentPage = 1,
     registersPerPage = 10,
     totalCountOfRegisters,
+    totalCountOfPages,
     onPageChange
 }: PaginationProps) {
 
     const siblingsCount = 2
-    const lastPage = Math.ceil(totalCountOfRegisters / registersPerPage)
+    const lastPage = Math.ceil(totalCountOfPages)
 
     const previousPages = currentPage > 1 ?
     generatePagesArray(currentPage - 1 - siblingsCount, currentPage - 1) : []
@@ -44,7 +46,7 @@ export function Pagination({
             <Box>
                 <strong>{currentPage}</strong>
                 <strong> de </strong>
-                <strong>{totalCountOfRegisters}</strong>
+                <strong>{totalCountOfPages}</strong>
             </Box>
             <Stack direction='row'>
             {currentPage > 1 + siblingsCount && (
