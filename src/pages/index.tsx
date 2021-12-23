@@ -204,6 +204,8 @@ export const getStaticProps: GetStaticProps = async () => {
     headers,
   });
   const data = await response.json();
+  //@ts-ignore
+  //@ts-nocheck
   const { coins } = data.data;
 
   const returnedCoins = coins.map((coin) => {
