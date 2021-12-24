@@ -19,20 +19,38 @@ export default async (
         console.log(error);
       }
       break;
-      case "POST":
-          try {
-              const {
+    case "POST":
+      try {
+        const session = await getSession({ req });
+        const { email } = session.user;
+
+        const {
+          coin,
+          iconUrl,
+          quantity,
+          valueInTheBuyDate,
+          buyDate,
+          investedValue,
+        } = req.body;
+
+        const newCrypto = await dbConnect.collection("users").updateOne(
+          { email },
+          {
+            $push: {
+              cryptos: {
                 coin,
+                iconUrl,
                 quantity,
                 valueInTheBuyDate,
-                updatedValue,
                 buyDate,
                 investedValue,
-                investedValueUpdated
-              } = req.body
-          } catch (error) {
-              
+              },
+            },
           }
-      default:
+        );
+
+        return res.status(200).json({ success: true, data: newCrypto });
+      } catch (error) {}
+    default:
   }
 };
