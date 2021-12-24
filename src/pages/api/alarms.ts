@@ -43,27 +43,6 @@ export default async (
       } catch (error) {
         console.log(error);
       }
-    case "UPDATE":
-      try {
-        const session = await getSession({ req });
-        const { email } = session.user;
-        const { dbConnect } = await connectDb();
-
-        const { id, coin, targetValue, isActive } = req.body;
-
-        const newAlarm = dbConnect.collection("users").updateOne(
-          { email },
-          {
-            id,
-            coin,
-            targetValue,
-            isActive,
-          }
-        );
-        res.status(200).json({ success: true, data: { newAlarm } });
-      } catch (error) {
-        console.log(error);
-      }
       break;
     case "DELETE":
       try {

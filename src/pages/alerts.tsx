@@ -110,26 +110,10 @@ export default function Alerts({ returnedCoins }) {
         closeModal()
     }
 
-    function alterAlarmStatus(coin) {
-        const disabledAlarms = alarms.map(alarm =>
-            alarm.coin === coin ?
-                {
-                    ...alarms,
-                    id: coin.id,
-                    coin: alarm.coin,
-                    iconUrl: alarm.iconUrl,
-                    targetValue: alarm.targetValue,
-                    isActive: !alarm.isActive
-                }
-                :
-                alarm
-        )
-        setAlarms(disabledAlarms)
-    }
 
 
     async function removeAlarm(id) {
-        await api.delete('/alarms', {data: {id: id}})
+        await api.delete('/alarms', { data: { id: id } })
         toast({
             description: "Alarme removido com sucesso.",
             position: 'top',
@@ -176,7 +160,6 @@ export default function Alerts({ returnedCoins }) {
                                         iconUrl={alarm.iconUrl}
                                         targetValue={alarm.targetValue}
                                         isActive={alarm.isActive}
-                                        alterAlarmStatus={() => alterAlarmStatus(alarm.coin)}
                                         removeAlarm={() => removeAlarm(alarm.id)}
                                     />
                                 )) :

@@ -1,5 +1,4 @@
 import { HStack, Text, VStack } from "@chakra-ui/react";
-import Switch from 'react-switch'
 
 type AlarmProps = {
     id: string;
@@ -19,7 +18,6 @@ export function Alert({
     targetValue,
     isActive,
     removeAlarm,
-    alterAlarmStatus,
     iconUrl
 }: AlarmProps) {
     return (
@@ -90,10 +88,6 @@ export function Alert({
                     {isActive ? 'Ativado' : 'Desativado'}
                 </Text>
             </VStack>
-            <Switch
-                checked={isActive}
-                onChange={alterAlarmStatus}
-            />
             <SecondaryButton
                 label='Remover alarme'
                 action={removeAlarm}
