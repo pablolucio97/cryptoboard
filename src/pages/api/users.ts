@@ -2,8 +2,6 @@ import {NextApiRequest, NextApiResponse} from 'next'
 import { getSession } from 'next-auth/client'
 import  connectDb from '../../services/MongoClient'
 
-connectDb()
-
 export default async(req: NextApiRequest, res: NextApiResponse) : Promise<void> => {
     const {dbConnect} = await connectDb()
     if(req.method === 'GET'){

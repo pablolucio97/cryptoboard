@@ -4,7 +4,8 @@ import {
     HStack,
     Select,
     Text,
-    VStack
+    VStack,
+    useToast
 
 } from '@chakra-ui/react'
 import { GetStaticProps } from 'next'
@@ -18,6 +19,7 @@ import { SubTitle } from '../components/SubTitle'
 import { Title } from '../components/Title'
 import styles from '../styles/modalStyles.module.scss'
 import { useSession } from 'next-auth/client'
+import { api } from '../services/api'
 
 type CoinsProps = {
     id: number;
@@ -34,6 +36,7 @@ type AlarmProps = {
 
 export default function Alerts({ returnedCoins }) {
 
+    const toast = useToast()
 
     const [session] = useSession()
 
@@ -46,6 +49,15 @@ export default function Alerts({ returnedCoins }) {
 
     useEffect(() => {
         setCoins([...returnedCoins])
+    }, [])
+
+    async function getAlarms() {
+        const alarms = await api.get('/alarms')
+        console.log(alarms)
+    }
+
+    useEffect(() => {
+        getAlarms()
     }, [])
 
     function openModal() {
@@ -66,14 +78,24 @@ export default function Alerts({ returnedCoins }) {
         setSelectedCoinCurrentValue(currentValue)
     }
 
-    function createNewAlarm(e: FormEvent) {
+    async function createNewAlarm(e: FormEvent) {
+
         e.preventDefault()
         const newAlarm = {
             coin: selectedCoin,
             targetValue: coinAlarmTargetValue,
             isActive: true
         }
-        alarms.push(newAlarm)
+        await api.post('/alarms', newAlarm)
+
+        toast({
+            title: 'Novo alarme',
+            description: "Alarme adicionado com sucesso.",
+            position:'top',
+            duration: 3000,
+            isClosable: true
+        })
+        
         closeModal()
     }
 
@@ -97,6 +119,7 @@ export default function Alerts({ returnedCoins }) {
         const filteredAlarms = alarms.filter(alarm => alarm.coin !== coin)
         setAlarms(filteredAlarms)
     }
+
 
     return (
         <>
@@ -233,6 +256,7 @@ export default function Alerts({ returnedCoins }) {
                 </form>
 
             </Modal>
+        
         </>
     )
 }
@@ -260,7 +284,7 @@ export const getStaticProps: GetStaticProps = async () => {
             price: Intl.NumberFormat('en-US', {
                 currency: 'USD',
                 style: 'currency',
-                maximumFractionDigits: coin.price >= 1 ?  2 : 6,
+                maximumFractionDigits: coin.price >= 1 ? 2 : 6,
             }).format(coin.price)
         }
     })
