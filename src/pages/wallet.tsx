@@ -36,7 +36,7 @@ export default function Wallet({ returnedCoins }) {
     }
 
     function calcPreviewCoinQuantity(coinSymbol) {
-        if (coinSymbol === 'Select') {
+        if (coinSymbol === '') {
             return
         }
         const currentValue = coins.filter(coin => coin.symbol === coinSymbol)[0].price
@@ -51,8 +51,11 @@ export default function Wallet({ returnedCoins }) {
         setSelectedCoinCurrentValue(currentValue)
         setSelectedCoinImgUrl(coinIconURL)
         setCoinQuanityPreview(coinsPreview)
-
     }
+
+    useEffect(() => {
+        calcPreviewCoinQuantity('BTC')
+    }, [valueToInvest])
 
     async function buyCrypto(e: FormEvent) {
         e.preventDefault()
@@ -69,9 +72,7 @@ export default function Wallet({ returnedCoins }) {
             investedValue: valueToInvest,
         }
 
-        console.log(newCrypto)
-
-        await api.post('/wallet',  newCrypto ).then(() => closeModal())
+        await api.post('/wallet', newCrypto).then(() => closeModal())
         toast({
             title: 'Compra de moeda',
             description: "Compra realizada com sucesso.",
