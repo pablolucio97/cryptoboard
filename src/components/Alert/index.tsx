@@ -6,7 +6,6 @@ type AlarmProps = {
     iconUrl: string;
     targetValue: number;
     isActive: boolean;
-    alterAlarmStatus?: () => void;
     removeAlarm?: () => void;
 }
 

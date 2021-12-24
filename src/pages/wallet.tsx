@@ -1,16 +1,51 @@
 import Head from "next/head";
-import React from "react";
-import { Flex, VStack, HStack, Text } from '@chakra-ui/react'
+import React, { useEffect, useState } from "react";
+import { Flex, VStack, HStack, Text, Select } from '@chakra-ui/react'
 import { Title } from '../components/Title'
 import { SubTitle } from '../components/SubTitle'
 import { WalletCoin } from '../components/WalletCoin'
 import dynamic from 'next/dynamic'
+import { PrimaryButton } from "../components/PrimaryButton";
+import Modal from 'react-modal'
+import styles from '../styles/modalStyles.module.scss'
+import { SecondaryButton } from "../components/SecondaryButton";
+import { GetStaticProps } from "next";
 
 const Chart = dynamic(() => import('react-apexcharts'), {
     ssr: false
 })
 
-export default function Wallet() {
+export default function Wallet({returnedCoins}) {
+    
+    const [openBuyCoinModal, setOpenBuyCoinModal] = useState(false)
+    const [selectedCoin, setSelectedCoin] = useState('')
+    const [selectedCoinImgUrl, setSelectedCoinImgUrl] = useState('')
+    const [selectedCoinCurrentValue, setSelectedCoinCurrentValue] = useState(0)
+    const [coins, setCoins] = useState(returnedCoins)
+    const [valueToInvest, setValueToInvest] = useState(0)
+    const [coinQuanityPreview, setCoinQuanityPreview] = useState(0)
+
+    function openModal(){
+        setOpenBuyCoinModal(true)
+    }
+    function closeModal(){
+        setOpenBuyCoinModal(false)
+    }
+
+    function calcPreviewCoinQuantity(coinSymbol) {
+        if (coinSymbol === 'Select') {
+            return
+        }
+        const currentValue = coins.filter(coin => coin.symbol === coinSymbol)[0].price
+        const coinIconURL = coins.filter(coin => coin.symbol === coinSymbol)[0].iconUrl
+
+        const coinsPreview = Number(valueToInvest/currentValue)
+
+        setSelectedCoinCurrentValue(currentValue)
+        setSelectedCoinImgUrl(coinIconURL)
+        setCoinQuanityPreview(coinsPreview)
+    }
+
 
     const coinsValue = [44, 15, 13, 33]
     const coinsName = ['Bitcoin', 'Ethereum', 'The Graph', 'Decentraland']
@@ -20,31 +55,31 @@ export default function Wallet() {
         labels: coinsName,
         series: coinsValue,
         chart: {
-        width: 320,
-        type: 'donut',
-      },
-      dataLabels: {
-        enabled: false
-      },
-      responsive: [{
-        breakpoint: 480,
-        options: {
-          chart: {
-            width: 200
-          },
-          legend: {
-            show: false
-          }
+            width: 320,
+            type: 'donut',
+        },
+        dataLabels: {
+            enabled: false
+        },
+        responsive: [{
+            breakpoint: 480,
+            options: {
+                chart: {
+                    width: 200
+                },
+                legend: {
+                    show: false
+                }
+            }
+        }],
+        legend: {
+            position: 'right',
+            offsetY: 0,
+            height: 230,
         }
-      }],
-      legend: {
-        position: 'right',
-        offsetY: 0,
-        height: 230,
-      }
-      };
+    };
 
-  
+
     return (
         <>
             <Head>
@@ -59,30 +94,30 @@ export default function Wallet() {
                 justifyContent='flex-start'
                 alignItems='center'
                 padding='0 4rem'
-            >
+                >
                 <VStack
                     display="flex"
                     flexDirection='column'
                     alignItems='flex-start'
-                >
+                    >
                     <Title
                         content="Carteira"
-                    />
+                        />
                     <SubTitle
                         content="Minhas criptomoedas"
-                    />
+                        />
                     <VStack
                         width="1200px"
                         backgroundColor='white'
                         padding='1rem'
-                    >
+                        >
                         <HStack
                             display="flex"
                             alignItems="center"
                             justifyContent="space-evenly"
                             paddingLeft="4rem"
                             width="100%"
-                        >
+                            >
                             <Text
                                 color='black'
                                 fontWeight='800'
@@ -91,7 +126,7 @@ export default function Wallet() {
                                 marginLeft='2.48rem'
                                 width='40px'
                                 wordBreak='break-word'
-                            >
+                                >
                                 Moeda
                             </Text>
                             <Text
@@ -100,7 +135,7 @@ export default function Wallet() {
                                 textAlign='center'
                                 fontSize='.64rem'
                                 wordBreak='break-word'
-                            >
+                                >
                                 Quantidade
                             </Text>
                             <Text
@@ -110,7 +145,7 @@ export default function Wallet() {
                                 fontSize='.64rem'
                                 width='80px'
                                 wordBreak='break-word'
-                            >
+                                >
                                 Valor na data da compra
                             </Text>
                             <Text
@@ -119,7 +154,7 @@ export default function Wallet() {
                                 textAlign='center'
                                 fontSize='.64rem'
                                 wordBreak='break-word'
-                            >
+                                >
                                 Valor atualizado
                             </Text>
                             <Text
@@ -130,7 +165,7 @@ export default function Wallet() {
                                 marginLeft='3rem'
                                 width='60px'
                                 wordBreak='break-word'
-                            >
+                                >
                                 Data da compra
                             </Text>
                             <Text
@@ -140,7 +175,7 @@ export default function Wallet() {
                                 fontSize='.64rem'
                                 width='60px'
                                 wordBreak='break-word'
-                            >
+                                >
                                 Valor investido
                             </Text>
                             <Text
@@ -150,7 +185,7 @@ export default function Wallet() {
                                 fontSize='.64rem'
                                 width='60px'
                                 wordBreak='break-word'
-                            >
+                                >
                                 Valor investido atualizado
                             </Text>
                             <Text
@@ -161,39 +196,27 @@ export default function Wallet() {
                                 width='80px'
                                 wordBreak='break-word'
                                 marginRight='2rem'
-                            >
+                                >
                                 Porcentagem de perda/ganho
                             </Text>
                         </HStack>
                         <WalletCoin />
                         <WalletCoin />
-                        <WalletCoin />
-                        <WalletCoin />
-                        <WalletCoin />
-                        <WalletCoin />
-                        <WalletCoin />
-                        <WalletCoin />
-                        <WalletCoin />
-                        <WalletCoin />
-                        <WalletCoin />
-                        <WalletCoin />
-                        <WalletCoin />
-                        <WalletCoin />
-                        <WalletCoin />
-                        <WalletCoin />
-                        <WalletCoin />
-                        <WalletCoin />
-                        <WalletCoin />
-                        <WalletCoin />
-                        <WalletCoin />
-                        <WalletCoin />
+
                     </VStack>
+                    <PrimaryButton
+                        label="Comprar moeda"
+                        action={openModal}
+                        size="md"
+                        disabled={false}
+                        type="button"
+                        />
                     <Title
                         content="Resumo"
-                    />
+                        />
                     <SubTitle
                         content="Informações resumidas da carteira"
-                    />
+                        />
                     <VStack
                         display="flex"
                         flex-direction="column"
@@ -202,21 +225,21 @@ export default function Wallet() {
                         width="1200px"
                         backgroundColor='white'
                         padding='1rem'
-                    >
+                        >
                         <Text
                             marginBottom='4px'
                             fontWeight='500'
-                        >
+                            >
                             Total investido: $3.657,00
                         </Text>
                         <Text
                             fontWeight='500'
-                        >
+                            >
                             Total de ativos: 4
                         </Text>
                         <Text
                             fontWeight='500'
-                        >
+                            >
                             Valor do lucro total: $23.657,88
                         </Text>
                         <Chart
@@ -225,10 +248,107 @@ export default function Wallet() {
                             options={options}
                             height="300px"
                             series={options.series}
-                        />
+                            />
                     </VStack>
                 </VStack>
+                <Modal
+                isOpen={openBuyCoinModal}
+                onRequestClose={closeModal}
+                className={styles.activemodal}
+                overlayClassName={styles.reactModalOverlay}
+            >
+                <strong>Comprar moeda</strong>
+                <form onSubmit={() => {}}>
+                    <Text>Moeda</Text>
+                    <Select
+                        onChange={(e) => { setSelectedCoin(e.target.value), calcPreviewCoinQuantity(e.target.value) }}
+                    >
+                        {coins.map(coin => (
+                            <option key={coin.id} value={coin.symbol}>{coin.symbol}</option>
+                        ))}
+                    </Select>
+                    <HStack
+                        display="flex"
+                        width='48px'
+                        alignItems="center"
+                        padding='1rem'
+                    >
+                        {selectedCoin !== '' && (
+                            <img
+                                src={selectedCoinImgUrl}
+                                width="24" height="24"
+                            />
+                        )}
+                        <Text
+                            color='gray'
+                        >
+                            {selectedCoin}
+                        </Text>
+                    </HStack>
+                    <Text>Valor de compra (USD)</Text>
+                    <Text>Previsão: {coinQuanityPreview} {selectedCoin}'s.</Text>
+                    <input type="text"
+                        min={0}
+                        max={1000}
+                        required
+                        maxLength={10}
+                        value={valueToInvest}
+                        onChange={(e) => {Number(setValueToInvest(e.target.valueAsNumber))}}
+                    />
+                    <HStack
+                        mt='1rem'
+                    >
+                        <PrimaryButton
+                            label='Confirmar'
+                            action={() => {}}
+                            type='submit'
+                        />
+                        <SecondaryButton
+                            label='Cancelar'
+                            action={closeModal}
+                        />
+                    </HStack>
+                </form>
+
+            </Modal>
             </Flex>
         </>
     )
+}
+
+export const getStaticProps : GetStaticProps = async () => {
+
+    const headers = {
+        'x-rapidapi-host': 'coinranking1.p.rapidapi.com',
+        'x-rapidapi-key': process.env.RAPID_API_KEY,
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json'
+    }
+
+    const response = await fetch('https://coinranking1.p.rapidapi.com/coins', {
+        headers
+    })
+
+    const { data } = await response.json()
+    const coins = data.coins
+
+    const returnedCoins = coins.map(coin => {
+        return {
+            id: coin.id,
+            symbol: coin.symbol.toUpperCase(),
+            iconUrl: coin.iconUrl,
+            price: Intl.NumberFormat('en-US', {
+                currency: 'USD',
+                style: 'currency',
+                maximumFractionDigits: coin.price >= 1 ? 2 : 6,
+            }).format(coin.price)
+        }
+    })
+
+
+    return{
+        props:{
+            returnedCoins
+        }
+    }
 }
