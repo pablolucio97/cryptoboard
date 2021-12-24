@@ -24,19 +24,20 @@ export default async (
         const { dbConnect } = await connectDb();
         const session = await getSession({ req });
         const { email } = session.user;
-        const { coin, targetValue, isActive } = req.body;
+        const { coin, iconUrl, targetValue, isActive } = req.body;
 
         const newAlarm = await dbConnect.collection("users").updateOne(
           { email },
           {
-            $set: {
+            $push: {
               alarms: {
                 coin,
+                iconUrl,
                 targetValue,
                 isActive,
-              }
-            }
-        }
+              },
+            },
+          }
         );
         return res.send(res.json({ success: true, data: newAlarm }));
       } catch (error) {

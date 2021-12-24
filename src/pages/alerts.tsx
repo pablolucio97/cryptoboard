@@ -25,10 +25,12 @@ type CoinsProps = {
     id: number;
     symbol?: string;
     price?: number;
+    iconUrl?: string;
 }
 
 type AlarmProps = {
     coin: string;
+    iconUrl: string;
     targetValue: number;
     isActive: boolean;
     removeAlarm?: () => void;
@@ -43,6 +45,7 @@ export default function Alerts({ returnedCoins }) {
     const [newAlarmModalOpen, setNewAlarmModalOpen] = useState(false)
     const [coins, setCoins] = useState<CoinsProps[]>([])
     const [selectedCoin, setSelectedCoin] = useState('')
+    const [selectedCoinImgUrl, setSelectedCoinImgUrl] = useState('')
     const [selectedCoinCurrentValue, setSelectedCoinCurrentValue] = useState(0)
     const [coinAlarmTargetValue, setCoinAlarmTargetValue] = useState(0)
     const [alarms, setAlarms] = useState<AlarmProps[]>([])
@@ -52,13 +55,14 @@ export default function Alerts({ returnedCoins }) {
     }, [])
 
     async function getAlarms() {
-        const alarms = await api.get('/alarms')
-        console.log(alarms)
+        const data = await api.get('/alarms')
+        const { alarms } = data.data.alarms
+        if (alarms) setAlarms(alarms)
     }
 
     useEffect(() => {
         getAlarms()
-    }, [])
+    }, [getAlarms])
 
     function openModal() {
         setNewAlarmModalOpen(true)
@@ -75,7 +79,10 @@ export default function Alerts({ returnedCoins }) {
             return
         }
         const currentValue = coins.filter(coin => coin.symbol === coinSymbol)[0].price
+        const coinIconURL = coins.filter(coin => coin.symbol === coinSymbol)[0].iconUrl
+        console.log(coinIconURL)
         setSelectedCoinCurrentValue(currentValue)
+        setSelectedCoinImgUrl(coinIconURL)
     }
 
     async function createNewAlarm(e: FormEvent) {
@@ -84,6 +91,7 @@ export default function Alerts({ returnedCoins }) {
         const newAlarm = {
             coin: selectedCoin,
             targetValue: coinAlarmTargetValue,
+            iconUrl: selectedCoinImgUrl,
             isActive: true
         }
         await api.post('/alarms', newAlarm)
@@ -91,11 +99,11 @@ export default function Alerts({ returnedCoins }) {
         toast({
             title: 'Novo alarme',
             description: "Alarme adicionado com sucesso.",
-            position:'top',
+            position: 'top',
             duration: 3000,
             isClosable: true
         })
-        
+
         closeModal()
     }
 
@@ -105,6 +113,7 @@ export default function Alerts({ returnedCoins }) {
                 {
                     ...alarms,
                     coin: alarm.coin,
+                    iconUrl: alarm.iconUrl,
                     targetValue: alarm.targetValue,
                     isActive: !alarm.isActive
                 }
@@ -154,6 +163,7 @@ export default function Alerts({ returnedCoins }) {
                                 alarms.map(alarm => (
                                     <Alert
                                         coin={alarm.coin}
+                                        iconUrl={alarm.iconUrl}
                                         targetValue={alarm.targetValue}
                                         isActive={alarm.isActive}
                                         alterAlarmStatus={() => alterAlarmStatus(alarm.coin)}
@@ -227,13 +237,28 @@ export default function Alerts({ returnedCoins }) {
                             <option key={coin.id} value={coin.symbol}>{coin.symbol}</option>
                         ))}
                     </Select>
-                    <Title
-                        content={selectedCoin}
-                        size='small'
-                    />
+                    <HStack
+                        display="flex"
+                        width='48px'
+                        alignItems="center"
+                        padding='1rem'
+                    >
+                        {selectedCoin !== '' && (
+                        <img
+                            src={selectedCoinImgUrl}
+                            width="24" height="24"
+                        />
+                       )}
+                        <Text
+                            color='gray'
+                        >
+                            {selectedCoin}
+                        </Text>
+                    </HStack>
                     <Text>Valor atual: {selectedCoinCurrentValue}</Text>
                     <Text>Valor alvo (USD)</Text>
                     <input type="text"
+                        placeholder='$'
                         onChange={(e) => { setCoinAlarmTargetValue(Number(e.target.value)) }}
                         min={0}
                         max={1000}
@@ -256,7 +281,7 @@ export default function Alerts({ returnedCoins }) {
                 </form>
 
             </Modal>
-        
+
         </>
     )
 }
@@ -281,6 +306,7 @@ export const getStaticProps: GetStaticProps = async () => {
         return {
             id: coin.id,
             symbol: coin.symbol.toUpperCase(),
+            iconUrl: coin.iconUrl,
             price: Intl.NumberFormat('en-US', {
                 currency: 'USD',
                 style: 'currency',
