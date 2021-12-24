@@ -22,13 +22,14 @@ import { useSession } from 'next-auth/client'
 import { api } from '../services/api'
 
 type CoinsProps = {
-    id: number;
+    id: string;
     symbol?: string;
     price?: number;
     iconUrl?: string;
 }
 
 type AlarmProps = {
+    id: string;
     coin: string;
     iconUrl: string;
     targetValue: number;
@@ -62,7 +63,7 @@ export default function Alerts({ returnedCoins }) {
 
     useEffect(() => {
         getAlarms()
-    }, [getAlarms])
+    }, [getAlarms, removeAlarm])
 
     function openModal() {
         setNewAlarmModalOpen(true)
@@ -89,11 +90,13 @@ export default function Alerts({ returnedCoins }) {
 
         e.preventDefault()
         const newAlarm = {
+            id: String(Number(Math.random() * 1000).toFixed(0)),
             coin: selectedCoin,
             targetValue: coinAlarmTargetValue,
             iconUrl: selectedCoinImgUrl,
             isActive: true
         }
+
         await api.post('/alarms', newAlarm)
 
         toast({
@@ -112,6 +115,7 @@ export default function Alerts({ returnedCoins }) {
             alarm.coin === coin ?
                 {
                     ...alarms,
+                    id: coin.id,
                     coin: alarm.coin,
                     iconUrl: alarm.iconUrl,
                     targetValue: alarm.targetValue,
@@ -124,9 +128,14 @@ export default function Alerts({ returnedCoins }) {
     }
 
 
-    function removeAlarm(coin) {
-        const filteredAlarms = alarms.filter(alarm => alarm.coin !== coin)
-        setAlarms(filteredAlarms)
+    async function removeAlarm(id) {
+        await api.delete('/alarms', {data: {id: id}})
+        toast({
+            description: "Alarme removido com sucesso.",
+            position: 'top',
+            duration: 3000,
+            isClosable: true
+        })
     }
 
 
@@ -162,12 +171,13 @@ export default function Alerts({ returnedCoins }) {
                             alarms.length > 0 ?
                                 alarms.map(alarm => (
                                     <Alert
+                                        id={alarm.id}
                                         coin={alarm.coin}
                                         iconUrl={alarm.iconUrl}
                                         targetValue={alarm.targetValue}
                                         isActive={alarm.isActive}
                                         alterAlarmStatus={() => alterAlarmStatus(alarm.coin)}
-                                        removeAlarm={() => removeAlarm(alarm.coin)}
+                                        removeAlarm={() => removeAlarm(alarm.id)}
                                     />
                                 )) :
                                 <Box
@@ -244,11 +254,11 @@ export default function Alerts({ returnedCoins }) {
                         padding='1rem'
                     >
                         {selectedCoin !== '' && (
-                        <img
-                            src={selectedCoinImgUrl}
-                            width="24" height="24"
-                        />
-                       )}
+                            <img
+                                src={selectedCoinImgUrl}
+                                width="24" height="24"
+                            />
+                        )}
                         <Text
                             color='gray'
                         >

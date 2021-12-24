@@ -2,6 +2,7 @@ import { HStack, Text, VStack } from "@chakra-ui/react";
 import Switch from 'react-switch'
 
 type AlarmProps = {
+    id: string;
     coin: string;
     iconUrl: string;
     targetValue: number;
@@ -12,7 +13,15 @@ type AlarmProps = {
 
 import { SecondaryButton } from '../SecondaryButton'
 
-export function Alert({ coin, targetValue, isActive, removeAlarm, alterAlarmStatus, iconUrl }: AlarmProps) {
+export function Alert({
+    id,
+    coin,
+    targetValue,
+    isActive,
+    removeAlarm,
+    alterAlarmStatus,
+    iconUrl
+}: AlarmProps) {
     return (
         <HStack
             display='flex'
@@ -20,6 +29,7 @@ export function Alert({ coin, targetValue, isActive, removeAlarm, alterAlarmStat
             width="720px"
             bg='white'
             padding='.32rem'
+            key={id}
         >
             <VStack
                 display='flex'
@@ -31,12 +41,13 @@ export function Alert({ coin, targetValue, isActive, removeAlarm, alterAlarmStat
                 <Text
                     fontSize='.88rem'
                     fontWeight='bold'
+                    mb='8px'
                 >
                     {coin}
                 </Text>
                 <img
                     src={iconUrl}
-                    width="18" height="18"
+                    width="24" height="24"
                 />
             </VStack>
             <VStack
