@@ -1,41 +1,29 @@
+import { GetStaticProps } from "next";
+import { useSession } from "next-auth/client";
+import Head from "next/head";
+import React, { FormEvent, useEffect, useState } from "react";
+import Modal from "react-modal";
+
 import {
-    Box,
-    Flex,
-    HStack,
-    Select,
-    Text,
-    VStack,
-    useToast
+  Box,
+  Flex,
+  HStack,
+  Select,
+  Text,
+  useToast,
+  VStack
+} from "@chakra-ui/react";
 
-} from '@chakra-ui/react'
-import { GetStaticProps } from 'next'
-import Head from 'next/head'
-import React, { FormEvent, useEffect, useState } from 'react'
-import Modal from 'react-modal'
-import { Alert } from '../components/Alert'
-import { PrimaryButton } from '../components/PrimaryButton'
-import { SecondaryButton } from '../components/SecondaryButton'
-import { SubTitle } from '../components/SubTitle'
-import { Title } from '../components/Title'
-import styles from '../styles/modalStyles.module.scss'
-import { useSession } from 'next-auth/client'
-import { api } from '../services/api'
-
-type CoinsProps = {
-    id: string;
-    symbol?: string;
-    price?: number;
-    iconUrl?: string;
-}
-
-type AlarmProps = {
-    id: string;
-    coin: string;
-    iconUrl: string;
-    targetValue: number;
-    isActive: boolean;
-    removeAlarm?: () => void;
-}
+import { Alert } from "../components/Alert";
+import { PrimaryButton } from "../components/PrimaryButton";
+import { SecondaryButton } from "../components/SecondaryButton";
+import { SubTitle } from "../components/SubTitle";
+import { Title } from "../components/Title";
+import { api } from "../services/api";
+import styles from "../styles/modalStyles.module.scss";
+import { AlarmProps, CoinProps } from "../types/coins";
+import { formatCurrency } from "../utils/formats";
+import { generateRandomId } from "../utils/generateRandomId";
 
 export default function Alerts({ returnedCoins }) {
 
@@ -44,7 +32,7 @@ export default function Alerts({ returnedCoins }) {
     const [session] = useSession()
 
     const [newAlarmModalOpen, setNewAlarmModalOpen] = useState(false)
-    const [coins, setCoins] = useState<CoinsProps[]>([])
+    const [coins, setCoins] = useState<CoinProps[]>([])
     const [selectedCoin, setSelectedCoin] = useState('')
     const [selectedCoinImgUrl, setSelectedCoinImgUrl] = useState('')
     const [selectedCoinCurrentValue, setSelectedCoinCurrentValue] = useState(0)
@@ -90,7 +78,7 @@ export default function Alerts({ returnedCoins }) {
 
         e.preventDefault()
         const newAlarm = {
-            id: String(Number(Math.random() * 1000).toFixed(0)),
+            id: generateRandomId(),
             coin: selectedCoin,
             targetValue: coinAlarmTargetValue,
             iconUrl: selectedCoinImgUrl,
@@ -300,11 +288,7 @@ export const getStaticProps: GetStaticProps = async () => {
             id: coin.id,
             symbol: coin.symbol.toUpperCase(),
             iconUrl: coin.iconUrl,
-            price: Intl.NumberFormat('en-US', {
-                currency: 'USD',
-                style: 'currency',
-                maximumFractionDigits: coin.price >= 1 ? 2 : 6,
-            }).format(coin.price)
+            price: formatCurrency(coin.price)
         }
     })
 

@@ -25,10 +25,11 @@ export default async (
         const { email } = session.user;
 
         const {
+          id,
           coin,
           iconUrl,
           quantity,
-          valueInTheBuyDate,
+          valueInBuyDate,
           buyDate,
           investedValue,
         } = req.body;
@@ -38,10 +39,11 @@ export default async (
           {
             $push: {
               cryptos: {
+                id,
                 coin,
                 iconUrl,
                 quantity,
-                valueInTheBuyDate,
+                valueInBuyDate,
                 buyDate,
                 investedValue,
               },

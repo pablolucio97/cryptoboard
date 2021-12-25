@@ -1,16 +1,20 @@
+import { GetStaticProps } from "next";
+import dynamic from "next/dynamic";
 import Head from "next/head";
 import React, { FormEvent, useEffect, useState } from "react";
-import { Flex, VStack, HStack, Text, Select, useToast } from '@chakra-ui/react'
-import { Title } from '../components/Title'
-import { SubTitle } from '../components/SubTitle'
-import { WalletCoin } from '../components/WalletCoin'
-import dynamic from 'next/dynamic'
+import Modal from "react-modal";
+
+import { Flex, HStack, Select, Text, useToast, VStack } from "@chakra-ui/react";
+
 import { PrimaryButton } from "../components/PrimaryButton";
-import Modal from 'react-modal'
-import styles from '../styles/modalStyles.module.scss'
 import { SecondaryButton } from "../components/SecondaryButton";
-import { GetStaticProps } from "next";
+import { SubTitle } from "../components/SubTitle";
+import { Title } from "../components/Title";
+import { WalletCoin } from "../components/WalletCoin";
 import { api } from "../services/api";
+import styles from "../styles/modalStyles.module.scss";
+import { WalletCoins } from "../types/coins";
+import { formatDate } from "../utils/formats";
 
 const Chart = dynamic(() => import('react-apexcharts'), {
     ssr: false
@@ -27,6 +31,7 @@ export default function Wallet({ returnedCoins }) {
     const [coins, setCoins] = useState(returnedCoins)
     const [valueToInvest, setValueToInvest] = useState(0)
     const [coinQuanityPreview, setCoinQuanityPreview] = useState(0)
+    const [walletCoins, setWalletCoins] = useState<WalletCoins[]>([])
 
     function openModal() {
         setOpenBuyCoinModal(true)
@@ -57,18 +62,26 @@ export default function Wallet({ returnedCoins }) {
         calcPreviewCoinQuantity('BTC')
     }, [valueToInvest])
 
+    async function fetchWallet() {
+        const data = await api.get('/wallet')
+        const { cryptos } = data.data.data
+        console.log(cryptos)
+        if (cryptos) setWalletCoins(cryptos)
+    }
+
+    useEffect(() => {
+        fetchWallet()
+    }, [])
+
     async function buyCrypto(e: FormEvent) {
         e.preventDefault()
         const newCrypto = {
+            id: String(Number(Math.random() * 1000).toFixed(0)),
             coin: selectedCoin,
             iconUrl: selectedCoinImgUrl,
             quantity: coinQuanityPreview,
-            valueInTheBuyDate: selectedCoinCurrentValue,
-            buyDate: Intl.DateTimeFormat('pt-BR', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric'
-            }).format(new Date()),
+            valueInBuyDate: selectedCoinCurrentValue,
+            buyDate: formatDate(),
             investedValue: valueToInvest,
         }
 
@@ -184,14 +197,16 @@ export default function Wallet({ returnedCoins }) {
                             >
                                 Valor na data da compra
                             </Text>
+
                             <Text
                                 color='black'
                                 fontWeight='800'
                                 textAlign='center'
                                 fontSize='.64rem'
+                                width='60px'
                                 wordBreak='break-word'
                             >
-                                Valor atualizado
+                                Valor investido
                             </Text>
                             <Text
                                 color='black'
@@ -209,35 +224,25 @@ export default function Wallet({ returnedCoins }) {
                                 fontWeight='800'
                                 textAlign='center'
                                 fontSize='.64rem'
-                                width='60px'
                                 wordBreak='break-word'
                             >
-                                Valor investido
-                            </Text>
-                            <Text
-                                color='black'
-                                fontWeight='800'
-                                textAlign='center'
-                                fontSize='.64rem'
-                                width='60px'
-                                wordBreak='break-word'
-                            >
-                                Valor investido atualizado
-                            </Text>
-                            <Text
-                                color='black'
-                                fontWeight='800'
-                                textAlign='center'
-                                fontSize='.64rem'
-                                width='80px'
-                                wordBreak='break-word'
-                                marginRight='2rem'
-                            >
-                                Porcentagem de perda/ganho
+                                Valor atualizado
                             </Text>
                         </HStack>
-                        <WalletCoin />
-                        <WalletCoin />
+                        {walletCoins.map(coin => (
+                            <WalletCoin
+                                id={coin.id}
+                                iconUrl={coin.iconUrl}
+                                coin={coin.coin}
+                                quantity={coin.quantity}
+                                buyDate={coin.buyDate}
+                                valueInBuyDate={coin.valueInBuyDate}
+                                updatedValue={coin.investedValue}
+                                investedValue={coin.investedValue}
+                                updatedInvestedValue={coin.updatedInvestedValue}
+                            />
+                        ))}
+
 
                     </VStack>
                     <PrimaryButton

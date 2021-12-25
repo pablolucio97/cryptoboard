@@ -1,9 +1,23 @@
 import { Flex, Text } from '@chakra-ui/react'
+import {WalletCoins} from '../../types/coins'
 
-export function WalletCoin() {
+
+
+export function WalletCoin({
+    id,
+    coin,
+    iconUrl,
+    quantity,
+    valueInBuyDate,
+    updatedValue,
+    buyDate,
+    investedValue,
+    updatedInvestedValue
+} : WalletCoins) {
     return (
         <Flex
             display='flex'
+            key={id}
             justify='space-evenly'
             alignItems='center'
             width="96%"
@@ -13,7 +27,7 @@ export function WalletCoin() {
             box-shadow='rgba(10, 10, 10, 0.1) 0px 8px 16px -2px, rgba(10, 10, 10, 0.02) 0px 0px 0px 1px'
         >
             <img
-                src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/1200px-Bitcoin.svg.png"
+                src={iconUrl}
                 alt="Cryptoboard"
                 width="24" height="24"
             />
@@ -22,33 +36,33 @@ export function WalletCoin() {
                 fontWeight='bold'
                 fontSize=".88rem"
                 >
-                Bitcoin
+                {coin}
             </Text>
             <Text
                 fontSize=".88rem"
             >
-                0,002313
+                {quantity}
             </Text>
             <Text
                 fontSize=".88rem"
             >
-                $48,356
+                {valueInBuyDate}
             </Text>
             <Text
                 fontSize=".88rem"
             >
-                $62,878
+                {updatedValue}
             </Text>
             <Text
                 fontSize=".88rem"
             >
-                12/12/2021
+                {buyDate}
 
             </Text>
             <Text
                 fontSize=".88rem"
             >
-                $55
+                {investedValue}
             </Text>
             <Text
                 color='green'
@@ -60,7 +74,7 @@ export function WalletCoin() {
                 color='green'
                 fontSize=".88rem"
             >
-                +12.04%
+               {updatedInvestedValue}
             </Text>
         </Flex>
     )
