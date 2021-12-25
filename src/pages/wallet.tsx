@@ -10,10 +10,11 @@ import { PrimaryButton } from "../components/PrimaryButton";
 import { SecondaryButton } from "../components/SecondaryButton";
 import { SubTitle } from "../components/SubTitle";
 import { Title } from "../components/Title";
+import { WalletComponent } from "../components/Wallet";
 import { WalletCoin } from "../components/WalletCoin";
 import { api } from "../services/api";
 import styles from "../styles/modalStyles.module.scss";
-import { WalletCoins } from "../types/coins";
+import { WalletCoins } from "../types/generalTypes";
 import { formatDate } from "../utils/formats";
 
 const Chart = dynamic(() => import('react-apexcharts'), {
@@ -137,7 +138,6 @@ export default function Wallet({ returnedCoins }) {
             <Flex
                 display="flex"
                 flexDirection='column'
-                alignSelf='center'
                 width="90vw"
                 margin='0 auto 2rem'
                 justifyContent='flex-start'
@@ -148,6 +148,7 @@ export default function Wallet({ returnedCoins }) {
                     display="flex"
                     flexDirection='column'
                     alignItems='flex-start'
+                    mb='1rem'
                 >
                     <Title
                         content="Carteira"
@@ -155,80 +156,7 @@ export default function Wallet({ returnedCoins }) {
                     <SubTitle
                         content="Minhas criptomoedas"
                     />
-                    <VStack
-                        width="1200px"
-                        backgroundColor='white'
-                        padding='1rem'
-                    >
-                        <HStack
-                            display="flex"
-                            alignItems="center"
-                            justifyContent="space-evenly"
-                            paddingLeft="4rem"
-                            width="100%"
-                        >
-                            <Text
-                                color='black'
-                                fontWeight='800'
-                                textAlign='center'
-                                fontSize='.64rem'
-                                marginLeft='2.48rem'
-                                width='40px'
-                                wordBreak='break-word'
-                            >
-                                Moeda
-                            </Text>
-                            <Text
-                                color='black'
-                                fontWeight='800'
-                                textAlign='center'
-                                fontSize='.64rem'
-                                wordBreak='break-word'
-                            >
-                                Quantidade
-                            </Text>
-                            <Text
-                                color='black'
-                                fontWeight='800'
-                                textAlign='center'
-                                fontSize='.64rem'
-                                width='80px'
-                                wordBreak='break-word'
-                            >
-                                Valor na data da compra
-                            </Text>
-
-                            <Text
-                                color='black'
-                                fontWeight='800'
-                                textAlign='center'
-                                fontSize='.64rem'
-                                width='60px'
-                                wordBreak='break-word'
-                            >
-                                Valor investido
-                            </Text>
-                            <Text
-                                color='black'
-                                fontWeight='800'
-                                textAlign='center'
-                                fontSize='.64rem'
-                                marginLeft='3rem'
-                                width='60px'
-                                wordBreak='break-word'
-                            >
-                                Data da compra
-                            </Text>
-                            <Text
-                                color='black'
-                                fontWeight='800'
-                                textAlign='center'
-                                fontSize='.64rem'
-                                wordBreak='break-word'
-                            >
-                                Valor atualizado
-                            </Text>
-                        </HStack>
+                    <WalletComponent>
                         {walletCoins.map(coin => (
                             <WalletCoin
                                 id={coin.id}
@@ -242,9 +170,7 @@ export default function Wallet({ returnedCoins }) {
                                 updatedInvestedValue={coin.updatedInvestedValue}
                             />
                         ))}
-
-
-                    </VStack>
+                    </WalletComponent>
                     <PrimaryButton
                         label="Comprar moeda"
                         action={openModal}

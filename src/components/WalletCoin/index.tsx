@@ -1,7 +1,7 @@
-import { Flex, Text } from '@chakra-ui/react'
-import {WalletCoins} from '../../types/coins'
+import { Flex, Text } from "@chakra-ui/react";
 
-
+import { WalletCoins } from "../../types/generalTypes";
+import { formatCrypto, formatCurrency } from "../../utils/formats";
 
 export function WalletCoin({
     id,
@@ -13,12 +13,12 @@ export function WalletCoin({
     buyDate,
     investedValue,
     updatedInvestedValue
-} : WalletCoins) {
+}: WalletCoins) {
     return (
         <Flex
             display='flex'
             key={id}
-            justify='space-evenly'
+            justify='flex-start'
             alignItems='center'
             width="96%"
             padding=".24rem"
@@ -30,51 +30,67 @@ export function WalletCoin({
                 src={iconUrl}
                 alt="Cryptoboard"
                 width="24" height="24"
+                style={{
+                    marginLeft:'12px'
+                }}
             />
             <Text
-                marginLeft="-12px"
+                marginLeft="8px"
                 fontWeight='bold'
                 fontSize=".88rem"
-                >
+                width='120px'
+                textAlign='start'
+            >
                 {coin}
             </Text>
             <Text
+                marginLeft="-24px"
+                fontSize=".88rem"
+                width='180px'
+                textAlign='start'
+            >
+                {formatCrypto(quantity)}
+            </Text>
+            <Text
+                width='180px'
+                textAlign='start'
                 fontSize=".88rem"
             >
-                {quantity}
+                {formatCurrency(valueInBuyDate)}
             </Text>
             <Text
                 fontSize=".88rem"
-            >
-                {valueInBuyDate}
-            </Text>
-            <Text
-                fontSize=".88rem"
-            >
-                {updatedValue}
-            </Text>
-            <Text
-                fontSize=".88rem"
-            >
+                width='140px'
+                textAlign='start'
+                marginLeft="32px"
+                >
                 {buyDate}
 
             </Text>
             <Text
+                width='120px'
+                marginLeft="64px"
+                textAlign='start'
                 fontSize=".88rem"
-            >
-                {investedValue}
+                >
+                {formatCurrency(updatedValue)}
             </Text>
+            <Text
+                fontSize=".88rem"
+                width='180px'
+                textAlign='center'
+                marginLeft="12px"
+            >
+                {formatCurrency(investedValue)}
+            </Text>
+
             <Text
                 color='green'
                 fontSize=".88rem"
+                width='180px'
+                textAlign='center'
             >
-                $61
-            </Text>
-            <Text
-                color='green'
-                fontSize=".88rem"
-            >
-               {updatedInvestedValue}
+                {updatedInvestedValue}
             </Text>
         </Flex>
     )

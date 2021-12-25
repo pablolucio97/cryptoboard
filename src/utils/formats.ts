@@ -15,3 +15,10 @@ export const formatDate = () => {
   }).format(new Date());
   return formatedDate;
 };
+
+export const formatCrypto = (value: number) => {
+  const formatedCurrency = Intl.NumberFormat("en-US", {
+    maximumFractionDigits: value >= 1 ? 2 : 6,
+  }).format(value);
+  return formatedCurrency
+};
