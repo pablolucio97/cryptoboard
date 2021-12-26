@@ -33,9 +33,7 @@ export function WalletCoin({
                 src={iconUrl}
                 alt="Cryptoboard"
                 width="24" height="24"
-                style={{
-                    marginLeft: '12px'
-                }}
+          
             />
             <Text
                 marginLeft="8px"
@@ -43,13 +41,13 @@ export function WalletCoin({
                 fontSize=".88rem"
                 width='120px'
                 textAlign='start'
-            >
+                >
                 {symbol}
             </Text>
             <Text
                 marginLeft="-24px"
                 fontSize=".88rem"
-                width='180px'
+                width='144px'
                 textAlign='start'
             >
                 {formatCrypto(quantity)}
@@ -88,7 +86,7 @@ export function WalletCoin({
             </Text>
             <Text
                 width='120px'
-                marginLeft="64px"
+                marginLeft="44px"
                 textAlign='start'
                 fontSize=".88rem"
             >
@@ -96,6 +94,7 @@ export function WalletCoin({
             </Text>
             <Text
                 onClick={removeCrypto}
+                marginRigth="-24px"
                 _hover={
                     {
                         cursor: 'pointer'

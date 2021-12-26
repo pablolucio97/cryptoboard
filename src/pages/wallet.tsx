@@ -2,7 +2,6 @@ import { GetStaticProps } from "next";
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import React, { FormEvent, useEffect, useMemo, useState } from "react";
-import { ImCoinDollar } from "react-icons/im";
 import Modal from "react-modal";
 
 import { Flex, HStack, Select, Text, useToast, VStack } from "@chakra-ui/react";
@@ -14,7 +13,8 @@ import { Title } from "../components/Title";
 import { WalletComponent } from "../components/Wallet";
 import { WalletCoin } from "../components/WalletCoin";
 import { api } from "../services/api";
-import styles from "../styles/modalStyles.module.scss";
+import buyCoinModalStyle from "../styles/buyCoinModalStyles.module.scss";
+import removeCoinModalStyle from "../styles/removeCoinModalStyles.module.scss";
 import { WalletCoins } from "../types/generalTypes";
 import { formatCurrency, formatDate } from "../utils/formats";
 
@@ -26,7 +26,8 @@ export default function Wallet({ returnedCoins }) {
 
     const toast = useToast()
 
-    const [openBuyCoinModal, setOpenBuyCoinModal] = useState(false)
+    const [buyCoinModal, setBuyCoinModal] = useState(false)
+    const [removeCoinModal, setRemoveCoinModal] = useState(false)
     const [selectedCoin, setSelectedCoin] = useState('')
     const [selectedCoinImgUrl, setSelectedCoinImgUrl] = useState('')
     const [selectedCoinCurrentValue, setSelectedCoinCurrentValue] = useState(0)
@@ -36,11 +37,19 @@ export default function Wallet({ returnedCoins }) {
     const [walletCoins, setWalletCoins] = useState<WalletCoins[]>([])
     const [totalInvested, setTotalInvested] = useState(0)
 
-    function openModal() {
-        setOpenBuyCoinModal(true)
+    function openBuyCoinModal() {
+        setBuyCoinModal(true)
     }
-    function closeModal() {
-        setOpenBuyCoinModal(false)
+    function openRemoveCoinModal() {
+        setRemoveCoinModal(true)
+    }
+
+    function closeBuyCoinModal() {
+        setBuyCoinModal(false)
+    }
+
+    function closeRemoveCoinModal() {
+        setRemoveCoinModal(false)
     }
 
     function calcPreviewCoinQuantity(coinSymbol) {
@@ -87,7 +96,7 @@ export default function Wallet({ returnedCoins }) {
             investedValue: valueToInvest,
         }
 
-        await api.post('/wallet', newCrypto).then(() => closeModal())
+        await api.post('/wallet', newCrypto).then(() => closeBuyCoinModal())
         toast({
             title: 'Compra de moeda',
             description: "Compra realizada com sucesso.",
@@ -95,6 +104,21 @@ export default function Wallet({ returnedCoins }) {
             duration: 3000,
             isClosable: true
         })
+    }
+
+    async function removeCrypto(id) {
+        await api.delete('/wallet', { data: { id: id } }).then(
+            () => {
+                closeRemoveCoinModal()
+                toast({
+                    title: 'Remoção de moeda',
+                    description: "Moeda removida da carteira.",
+                    position: 'top',
+                    duration: 3000,
+                    isClosable: true
+                })
+            }
+        )
     }
 
     useEffect(() => {
@@ -196,12 +220,13 @@ export default function Wallet({ returnedCoins }) {
                                 investedValue={coin.investedValue}
                                 updatedValue={getUpdatedCoinValue(coin.symbol)}
                                 difference={calcIncome(coin.symbol)}
+                                removeCrypto={() => removeCrypto(coin.id)}
                             />
                         ))}
                     </WalletComponent>
                     <PrimaryButton
                         label="Adicionar moeda"
-                        action={openModal}
+                        action={openBuyCoinModal}
                         size="md"
                         disabled={false}
                         type="button"
@@ -247,10 +272,10 @@ export default function Wallet({ returnedCoins }) {
                     </VStack>
                 </VStack>
                 <Modal
-                    isOpen={openBuyCoinModal}
-                    onRequestClose={closeModal}
-                    className={styles.activemodal}
-                    overlayClassName={styles.reactModalOverlay}
+                    isOpen={buyCoinModal}
+                    onRequestClose={closeBuyCoinModal}
+                    className={buyCoinModalStyle.activemodal}
+                    overlayClassName={buyCoinModalStyle.reactModalOverlay}
                 >
                     <strong>Adicionar moeda</strong>
                     <form onSubmit={buyCrypto}>
@@ -304,7 +329,7 @@ export default function Wallet({ returnedCoins }) {
                             />
                             <SecondaryButton
                                 label='Cancelar'
-                                action={closeModal}
+                                action={() => closeBuyCoinModal()}
                             />
                         </HStack>
                     </form>

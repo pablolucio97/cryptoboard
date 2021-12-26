@@ -1,0 +1,26 @@
+.activemodal {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    width: 240px;
+    height: 346px;
+    padding: 4rem;
+    background: #fff;
+    margin: 25% auto;
+    border-radius: 4px;
+    strong{
+        font-size: 1.24rem;
+    }
+}
+.reactModalOverlay{
+    background: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

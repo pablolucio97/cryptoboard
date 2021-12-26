@@ -20,7 +20,7 @@ import { SecondaryButton } from "../components/SecondaryButton";
 import { SubTitle } from "../components/SubTitle";
 import { Title } from "../components/Title";
 import { api } from "../services/api";
-import styles from "../styles/modalStyles.module.scss";
+import styles from "../styles/alertModalStyles.module.scss";
 import { AlarmProps, CoinProps } from "../types/generalTypes";
 import { formatCurrency } from "../utils/formats";
 import { generateRandomId } from "../utils/generateRandomId";

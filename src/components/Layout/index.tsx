@@ -1,18 +1,18 @@
+import { signIn, useSession } from "next-auth/client";
 import React, { ReactNode, useState } from "react";
-import { Box, Flex, VStack, Text } from '@chakra-ui/react'
+import Modal from "react-modal";
 
-import { Header } from "../Header";
-import { Footer } from "../Footer";
-import { Menu } from '../Menu'
-import { UserCard } from '../UserCard'
-import { GoogleSignInButton } from '../GoogleSignButton'
-import { useSession, signIn } from 'next-auth/client'
-import { PrimaryButton } from "../PrimaryButton";
-import Modal from 'react-modal'
-import styles from '../../styles/modalStyles.module.scss'
-import { SecondaryButton } from "../SecondaryButton";
+import { Box, Flex, Text, VStack } from "@chakra-ui/react";
+
+import styles from "../../styles/buyCoinModalStyles.module.scss";
 import { FacebookSignInButton } from "../FacebookSignInButton";
-
+import { Footer } from "../Footer";
+import { GoogleSignInButton } from "../GoogleSignButton";
+import { Header } from "../Header";
+import { Menu } from "../Menu";
+import { PrimaryButton } from "../PrimaryButton";
+import { SecondaryButton } from "../SecondaryButton";
+import { UserCard } from "../UserCard";
 
 type LayoutProps = {
     children: ReactNode

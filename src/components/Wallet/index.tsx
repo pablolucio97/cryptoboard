@@ -81,9 +81,8 @@ export function WalletComponent({ children }: WalletProps) {
                         fontWeight='800'
                         fontSize='.72rem'
                         textAlign='center'
-                        width='196px'
+                        width='126px'
                         wordBreak='break-word'
-                        marginRigth='40px'
                     >
                         Diferença
                     </Text>

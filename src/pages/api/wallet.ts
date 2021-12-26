@@ -54,6 +54,23 @@ export default async (
 
         return res.status(200).json({ success: true, data: newCrypto });
       } catch (error) {}
+      break;
+    case "DELETE":
+      const session = await getSession({ req });
+      const { email } = session.user;
+
+      const { id } = req.body;
+
+      const wallet = await dbConnect.collection("users").updateOne(
+        { email },
+        {
+          $pull: {
+            cryptos: { id },
+          },
+        }
+      );
+
+      res.status(200).json({ success: true, data: wallet });
     default:
   }
 };
