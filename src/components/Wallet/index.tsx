@@ -27,7 +27,7 @@ export function WalletComponent({ children }: WalletProps) {
                     <Text
                         fontWeight='800'
                         fontSize='.72rem'
-                        marginLeft='48px'
+                        marginLeft='32px'
                         marginRight='8px'
                     >
                         Moeda
@@ -81,8 +81,9 @@ export function WalletComponent({ children }: WalletProps) {
                         fontWeight='800'
                         fontSize='.72rem'
                         textAlign='center'
-                        width='180px'
+                        width='196px'
                         wordBreak='break-word'
+                        marginRigth='40px'
                     >
                         Diferença
                     </Text>

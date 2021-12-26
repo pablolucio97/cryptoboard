@@ -1,7 +1,7 @@
 import { GetStaticProps } from "next";
 import dynamic from "next/dynamic";
 import Head from "next/head";
-import React, { FormEvent, useEffect, useState } from "react";
+import React, { FormEvent, useEffect, useMemo, useState } from "react";
 import { ImCoinDollar } from "react-icons/im";
 import Modal from "react-modal";
 
@@ -16,7 +16,7 @@ import { WalletCoin } from "../components/WalletCoin";
 import { api } from "../services/api";
 import styles from "../styles/modalStyles.module.scss";
 import { WalletCoins } from "../types/generalTypes";
-import { formatDate } from "../utils/formats";
+import { formatCurrency, formatDate } from "../utils/formats";
 
 const Chart = dynamic(() => import('react-apexcharts'), {
     ssr: false
@@ -34,6 +34,7 @@ export default function Wallet({ returnedCoins }) {
     const [valueToInvest, setValueToInvest] = useState(0)
     const [coinQuanityPreview, setCoinQuanityPreview] = useState(0)
     const [walletCoins, setWalletCoins] = useState<WalletCoins[]>([])
+    const [totalInvested, setTotalInvested] = useState(0)
 
     function openModal() {
         setOpenBuyCoinModal(true)
@@ -73,6 +74,9 @@ export default function Wallet({ returnedCoins }) {
 
     async function buyCrypto(e: FormEvent) {
         e.preventDefault()
+        if (selectedCoin === '' || selectedCoin === 'Selecione uma moeda') {
+            return
+        }
         const newCrypto = {
             id: String(Number(Math.random() * 1000).toFixed(0)),
             symbol: selectedCoin,
@@ -95,17 +99,35 @@ export default function Wallet({ returnedCoins }) {
 
     useEffect(() => {
         fetchWallet()
-    }, [buyCrypto])
+    }, [walletCoins])
 
     function getUpdatedCoinValue(coinInWallet: string) {
         const updatedCoinValue = coins.filter(coin => coin.symbol === coinInWallet)
         return updatedCoinValue[0].price
     }
 
+    function calcIncome(coinInWallet: string) {
+        const upatedValue = Number(getUpdatedCoinValue(coinInWallet))
+        const filterValues = walletCoins.filter(coin => coin.symbol === coinInWallet)
+        const currentValue = Number(filterValues[0].valueInBuyDate)
+        const difference = Number(upatedValue - currentValue).toFixed(2)
+        return Number(difference)
+    }
 
-    const coinsValue = [44, 15, 13, 33]
-    const coinsName = ['Bitcoin', 'Ethereum', 'The Graph', 'Decentraland']
+    function calcTotalInvested() {
+        const total = walletCoins.reduce((acc, coin) => acc * coin.investedValue, 0)
+        console.log(total)
+        return total
+    }
 
+    function calcTotalIncomeDifference() {
+        const totalDifference = walletCoins.reduce((acc, coin) => acc * coin.investedValue, 0)
+        console.log(totalDifference)
+        return totalDifference
+    }
+
+    const coinsValue = walletCoins.map(coin => coin.investedValue)
+    const coinsName = walletCoins.map(coin => coin.symbol)
 
     var options = {
         labels: coinsName,
@@ -115,7 +137,7 @@ export default function Wallet({ returnedCoins }) {
             type: 'donut',
         },
         dataLabels: {
-            enabled: false
+            enabled: false,
         },
         responsive: [{
             breakpoint: 480,
@@ -173,7 +195,7 @@ export default function Wallet({ returnedCoins }) {
                                 valueInBuyDate={coin.valueInBuyDate}
                                 investedValue={coin.investedValue}
                                 updatedValue={getUpdatedCoinValue(coin.symbol)}
-                                updatedInvestedValue={coin.updatedInvestedValue}
+                                difference={calcIncome(coin.symbol)}
                             />
                         ))}
                     </WalletComponent>
@@ -195,7 +217,7 @@ export default function Wallet({ returnedCoins }) {
                         flex-direction="column"
                         justifyContent="flex-start"
                         alignItems="flex-start"
-                        width="1200px"
+                        width="1080px"
                         backgroundColor='white'
                         padding='1rem'
                     >
@@ -203,17 +225,17 @@ export default function Wallet({ returnedCoins }) {
                             marginBottom='4px'
                             fontWeight='500'
                         >
-                            Total investido: $3.657,00
+                            Total investido: {formatCurrency(calcTotalInvested())}
                         </Text>
                         <Text
                             fontWeight='500'
                         >
-                            Total de ativos: 4
+                            Total de ativos: {walletCoins.length}
                         </Text>
                         <Text
                             fontWeight='500'
                         >
-                            Valor do lucro total: $23.657,88
+                            Valor do lucro total: {formatCurrency(calcTotalIncomeDifference())}
                         </Text>
                         <Chart
                             type='donut'
@@ -234,6 +256,7 @@ export default function Wallet({ returnedCoins }) {
                     <form onSubmit={buyCrypto}>
                         <Text>Moeda</Text>
                         <Select
+                            placeholder='Selecione uma moeda'
                             onChange={(e) => { setSelectedCoin(e.target.value), calcPreviewCoinQuantity(e.target.value) }}
                         >
                             {coins.map(coin => (
@@ -247,12 +270,19 @@ export default function Wallet({ returnedCoins }) {
                             padding='1rem'
                         >
                         </HStack>
-                        <img
-                            src={selectedCoinImgUrl}
-                            width="24" height="24"
-                          
-                        />
-                        <Text>Valor de compra (USD)</Text>
+                        {selectedCoin !== '' &&
+                            (
+                                <HStack
+                                    display='flex'
+                                >
+                                    <img
+                                        src={selectedCoinImgUrl}
+                                        width="24" height="24" />
+                                    <Text>{selectedCoin}.</Text>
+                                </HStack>
+                            )
+                        }
+                        <Text>Valor de compra ($)</Text>
                         <input type="number"
                             min={0}
                             max={1000}
@@ -262,7 +292,7 @@ export default function Wallet({ returnedCoins }) {
                             onChange={(e) => { setValueToInvest(e.target.valueAsNumber) }}
                         />
                         {valueToInvest > 0 &&
-                            <Text>Previsão: {coinQuanityPreview} {selectedCoin}'s.</Text>
+                            <Text>Previsão: {coinQuanityPreview} {selectedCoin}'s</Text>
                         }
                         <HStack
                             mt='1rem'

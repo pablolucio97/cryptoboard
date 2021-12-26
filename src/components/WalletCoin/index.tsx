@@ -1,3 +1,5 @@
+import { FiTrash } from "react-icons/fi";
+
 import { Flex, Text } from "@chakra-ui/react";
 
 import { WalletCoins } from "../../types/generalTypes";
@@ -12,7 +14,8 @@ export function WalletCoin({
     updatedValue,
     buyDate,
     investedValue,
-    updatedInvestedValue
+    difference,
+    removeCrypto
 }: WalletCoins) {
     return (
         <Flex
@@ -31,7 +34,7 @@ export function WalletCoin({
                 alt="Cryptoboard"
                 width="24" height="24"
                 style={{
-                    marginLeft:'12px'
+                    marginLeft: '12px'
                 }}
             />
             <Text
@@ -63,7 +66,7 @@ export function WalletCoin({
                 width='140px'
                 textAlign='start'
                 marginLeft="32px"
-                >
+            >
                 {buyDate}
 
             </Text>
@@ -80,17 +83,26 @@ export function WalletCoin({
                 marginLeft="64px"
                 textAlign='start'
                 fontSize=".88rem"
-                >
+            >
                 {formatCurrency(updatedValue)}
             </Text>
-
             <Text
-                color='green'
+                width='120px'
+                marginLeft="64px"
+                textAlign='start'
                 fontSize=".88rem"
-                width='180px'
-                textAlign='center'
             >
-                {updatedInvestedValue}
+                {formatCurrency(difference)}
+            </Text>
+            <Text
+                onClick={removeCrypto}
+                _hover={
+                    {
+                        cursor: 'pointer'
+                    }
+                }
+            >
+                <FiTrash />
             </Text>
         </Flex>
     )

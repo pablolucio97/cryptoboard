@@ -8,7 +8,8 @@ export type WalletCoins = {
     updatedValue: number;
     buyDate: string;
     investedValue: number;
-    updatedInvestedValue: number;
+    difference?: number;
+    removeCrypto?: () => void;
 }
 
 export type CoinProps = {
