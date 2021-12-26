@@ -5,7 +5,7 @@ import { formatCrypto, formatCurrency } from "../../utils/formats";
 
 export function WalletCoin({
     id,
-    coin,
+    symbol,
     iconUrl,
     quantity,
     valueInBuyDate,
@@ -41,7 +41,7 @@ export function WalletCoin({
                 width='120px'
                 textAlign='start'
             >
-                {coin}
+                {symbol}
             </Text>
             <Text
                 marginLeft="-24px"
@@ -68,20 +68,20 @@ export function WalletCoin({
 
             </Text>
             <Text
-                width='120px'
-                marginLeft="64px"
-                textAlign='start'
-                fontSize=".88rem"
-                >
-                {formatCurrency(updatedValue)}
-            </Text>
-            <Text
                 fontSize=".88rem"
                 width='180px'
                 textAlign='center'
                 marginLeft="12px"
             >
                 {formatCurrency(investedValue)}
+            </Text>
+            <Text
+                width='120px'
+                marginLeft="64px"
+                textAlign='start'
+                fontSize=".88rem"
+                >
+                {formatCurrency(updatedValue)}
             </Text>
 
             <Text

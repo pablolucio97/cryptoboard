@@ -2,6 +2,7 @@ import { GetStaticProps } from "next";
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import React, { FormEvent, useEffect, useState } from "react";
+import { ImCoinDollar } from "react-icons/im";
 import Modal from "react-modal";
 
 import { Flex, HStack, Select, Text, useToast, VStack } from "@chakra-ui/react";
@@ -60,25 +61,21 @@ export default function Wallet({ returnedCoins }) {
     }
 
     useEffect(() => {
-        calcPreviewCoinQuantity('BTC')
+        calcPreviewCoinQuantity(selectedCoin)
     }, [valueToInvest])
 
     async function fetchWallet() {
         const data = await api.get('/wallet')
         const { cryptos } = data.data.data
-        console.log(cryptos)
         if (cryptos) setWalletCoins(cryptos)
     }
 
-    useEffect(() => {
-        fetchWallet()
-    }, [])
 
     async function buyCrypto(e: FormEvent) {
         e.preventDefault()
         const newCrypto = {
             id: String(Number(Math.random() * 1000).toFixed(0)),
-            coin: selectedCoin,
+            symbol: selectedCoin,
             iconUrl: selectedCoinImgUrl,
             quantity: coinQuanityPreview,
             valueInBuyDate: selectedCoinCurrentValue,
@@ -94,6 +91,15 @@ export default function Wallet({ returnedCoins }) {
             duration: 3000,
             isClosable: true
         })
+    }
+
+    useEffect(() => {
+        fetchWallet()
+    }, [buyCrypto])
+
+    function getUpdatedCoinValue(coinInWallet: string) {
+        const updatedCoinValue = coins.filter(coin => coin.symbol === coinInWallet)
+        return updatedCoinValue[0].price
     }
 
 
@@ -161,18 +167,18 @@ export default function Wallet({ returnedCoins }) {
                             <WalletCoin
                                 id={coin.id}
                                 iconUrl={coin.iconUrl}
-                                coin={coin.coin}
+                                symbol={coin.symbol}
                                 quantity={coin.quantity}
                                 buyDate={coin.buyDate}
                                 valueInBuyDate={coin.valueInBuyDate}
-                                updatedValue={coin.investedValue}
                                 investedValue={coin.investedValue}
+                                updatedValue={getUpdatedCoinValue(coin.symbol)}
                                 updatedInvestedValue={coin.updatedInvestedValue}
                             />
                         ))}
                     </WalletComponent>
                     <PrimaryButton
-                        label="Comprar moeda"
+                        label="Adicionar moeda"
                         action={openModal}
                         size="md"
                         disabled={false}
@@ -224,7 +230,7 @@ export default function Wallet({ returnedCoins }) {
                     className={styles.activemodal}
                     overlayClassName={styles.reactModalOverlay}
                 >
-                    <strong>Comprar moeda</strong>
+                    <strong>Adicionar moeda</strong>
                     <form onSubmit={buyCrypto}>
                         <Text>Moeda</Text>
                         <Select
@@ -240,18 +246,12 @@ export default function Wallet({ returnedCoins }) {
                             alignItems="center"
                             padding='1rem'
                         >
-                            {selectedCoin !== '' && (
-                                <img
-                                    src={selectedCoinImgUrl}
-                                    width="24" height="24"
-                                />
-                            )}
-                            <Text
-                                color='gray'
-                            >
-                                {selectedCoin}
-                            </Text>
                         </HStack>
+                        <img
+                            src={selectedCoinImgUrl}
+                            width="24" height="24"
+                          
+                        />
                         <Text>Valor de compra (USD)</Text>
                         <input type="number"
                             min={0}

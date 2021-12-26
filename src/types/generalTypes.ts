@@ -1,7 +1,8 @@
 export type WalletCoins = {
     id: string;
     iconUrl: string;
-    coin: string;
+    symbol?: string;
+    coin?: string;
     quantity: number;
     valueInBuyDate: number;
     updatedValue: number;

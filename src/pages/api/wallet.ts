@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/client";
+
 import connectDb from "../../services/MongoClient";
 
 export default async (
@@ -26,7 +27,7 @@ export default async (
 
         const {
           id,
-          coin,
+          symbol,
           iconUrl,
           quantity,
           valueInBuyDate,
@@ -40,7 +41,7 @@ export default async (
             $push: {
               cryptos: {
                 id,
-                coin,
+                symbol,
                 iconUrl,
                 quantity,
                 valueInBuyDate,
