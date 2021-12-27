@@ -1,4 +1,4 @@
-import { FiTrash } from "react-icons/fi";
+import { MdDelete } from "react-icons/md";
 
 import { Flex, Text } from "@chakra-ui/react";
 
@@ -101,7 +101,9 @@ export function WalletCoin({
                     }
                 }
             >
-                <FiTrash />
+                <MdDelete
+                    size={24}
+                />
             </Text>
         </Flex>
     )

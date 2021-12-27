@@ -17,6 +17,8 @@ export function WalletComponent({ children }: WalletProps) {
                 width="1200px"
                 backgroundColor='white'
                 padding='1rem'
+                height="400px"
+                overflowY='scroll'
             >
                 <HStack
                     display="flex"

@@ -1,13 +1,14 @@
-import { Flex, HStack, Text, VStack } from '@chakra-ui/react';
-import { GetStaticProps } from 'next';
+import { GetStaticProps } from "next";
 import Head from "next/head";
 import React, { memo, useEffect, useMemo, useState } from "react";
-import { DailyCoin } from '../components/DailyCoin';
-import { Pagination } from '../components/Pagination';
-import { SubTitle } from '../components/SubTitle';
-import { Title } from '../components/Title';
-import { TopCoin } from '../components/TopCoin';
 
+import { Flex, HStack, Text, VStack } from "@chakra-ui/react";
+
+import { DailyCoin } from "../components/DailyCoin";
+import { Pagination } from "../components/Pagination";
+import { SubTitle } from "../components/SubTitle";
+import { Title } from "../components/Title";
+import { TopCoin } from "../components/TopCoin";
 
 type CoinProps = {
   id: number;
@@ -212,7 +213,7 @@ export const getStaticProps: GetStaticProps = async () => {
     return {
       id: coin.id,
       symbol: coin.symbol,
-      name: coin.name,
+      name: coin.name.length > 12 ? coin.name.substring(0,12).concat('...') : coin.name,
       price: Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "USD",

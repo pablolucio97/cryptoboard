@@ -1,6 +1,5 @@
 import { Flex, Text } from "@chakra-ui/react";
 
-
 type DailyCoinProps = {
     id: number;
     symbol: string;
@@ -41,7 +40,7 @@ export function DailyCoin({
                 fontSize=".8rem"
                 width='240px'
                 wordBreak='break-word'
-                ml={8}
+                ml='4px'
             >
                 <img
                     src={iconUrl}
