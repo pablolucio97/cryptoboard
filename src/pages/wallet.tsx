@@ -2,7 +2,6 @@ import { GetStaticProps } from "next";
 import { useSession } from "next-auth/client";
 import dynamic from "next/dynamic";
 import Head from "next/head";
-import Script from "next/script";
 import React, { FormEvent, useEffect, useMemo, useState } from "react";
 import Modal from "react-modal";
 
@@ -44,7 +43,6 @@ export default function Wallet({ returnedCoins }) {
     const [valueToInvest, setValueToInvest] = useState(0)
     const [coinQuanityPreview, setCoinQuanityPreview] = useState(0)
     const [walletCoins, setWalletCoins] = useState<WalletCoins[]>([])
-    const [incomes, setIncomes] = useState([])
 
     //BUY CRYPTO MODAL
 
@@ -165,7 +163,6 @@ export default function Wallet({ returnedCoins }) {
     }, [walletCoins])
 
 
-
     useEffect(() => {
         fetchCryptos()
     }, [walletCoins])
@@ -173,6 +170,7 @@ export default function Wallet({ returnedCoins }) {
     useEffect(() => {
         calcPreviewCoinQuantity(selectedCoin)
     }, [valueToInvest])
+
 
     //CHART DATA
 
@@ -313,7 +311,8 @@ export default function Wallet({ returnedCoins }) {
                                     height="300px"
                                     series={options.series}
                                 />
-                            </VStack></>
+                            </VStack>
+                        </>
                     ) :
                         <Text>Faça login para ter acesso à sua carteira.</Text>
                     }

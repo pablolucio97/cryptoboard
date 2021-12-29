@@ -10,7 +10,7 @@ import { SubTitle } from "../components/SubTitle";
 import { Title } from "../components/Title";
 import { TopCoin } from "../components/TopCoin";
 
-type CoinProps = {
+  type CoinProps = {
   id: number;
   symbol: string;
   name: string;

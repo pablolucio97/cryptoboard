@@ -1,8 +1,8 @@
-import { Flex, Text, HStack } from '@chakra-ui/react'
-import { MdTimeline, MdAttachMoney, MdAddAlert } from 'react-icons/md'
-import Link from 'next/link'
-import { ReactNode } from 'react'
+import Link from "next/link";
+import { ReactNode } from "react";
+import { MdAddAlert, MdAttachMoney, MdTimeline } from "react-icons/md";
 
+import { Flex, HStack, Text } from "@chakra-ui/react";
 
 type MenuProps = {
     children?: ReactNode;
@@ -21,15 +21,15 @@ export function Menu({ children }: MenuProps) {
             <Text
                 fontWeight='700'
                 fontSize='24'
-                marginLeft='2.4rem'
+                margin='2.4rem 2.4rem 0'
             >
                 Menu
             </Text>
             <HStack
-                margin='.48rem 2.4rem'
+                margin='1.48rem 2.4rem'
                 cursor='pointer'
             >
-                <MdTimeline size={24} />
+                <MdTimeline size={24} style={{marginBottom: '36px', marginRight: '16px'}} />
                 <Link href='/'>
                     <Text>Mercado</Text>
                 </Link>
@@ -38,7 +38,7 @@ export function Menu({ children }: MenuProps) {
                 margin='.48rem 2.4rem'
                 cursor='pointer'
             >
-                <MdAttachMoney size={24} />
+                <MdAttachMoney size={24} style={{marginBottom: '36px', marginRight: '16px'}} />
                 <Link href='/wallet'>
                     <Text>Carteira</Text>
                 </Link>
@@ -47,7 +47,7 @@ export function Menu({ children }: MenuProps) {
                 margin='.48rem 2.4rem'
                 cursor='pointer'
             >
-                <MdAddAlert size={24} />
+                <MdAddAlert size={24} style={{marginBottom: '36px', marginRight: '16px'}} />
                 <Link href='/alerts'>
                     <Text>Alertas</Text>
                 </Link>

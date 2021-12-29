@@ -12,6 +12,7 @@ import { Header } from "../Header";
 import { Menu } from "../Menu";
 import { PrimaryButton } from "../PrimaryButton";
 import { SecondaryButton } from "../SecondaryButton";
+import { SideBar } from "../SideBarDrawer";
 import { UserCard } from "../UserCard";
 
 type LayoutProps = {
@@ -40,6 +41,27 @@ export function Layout({ children }: LayoutProps) {
         >
             <Header />
             <Flex>
+                <SideBar>
+                    {
+                        session ?
+                            <UserCard
+                                name={session.user.name}
+                                avatarUrl={session.user.image}
+                            />
+                            :
+
+                            <Box
+                                display="flex"
+                                margin='2rem 2rem 0'
+                            >
+                                <PrimaryButton
+                                    label="Fazer login"
+                                    action={() => openLoginModal()}
+                                    type="button"
+                                />
+                            </Box>
+                    }
+                </SideBar>
                 <Menu>
                     {
                         session ?
