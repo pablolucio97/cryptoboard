@@ -2,6 +2,7 @@ import { GetStaticProps } from "next";
 import { useSession } from "next-auth/client";
 import dynamic from "next/dynamic";
 import Head from "next/head";
+import Script from "next/script";
 import React, { FormEvent, useEffect, useMemo, useState } from "react";
 import Modal from "react-modal";
 
@@ -35,9 +36,7 @@ export default function Wallet({ returnedCoins }) {
     const toast = useToast()
     const session = useSession()
 
-
     const [buyCoinModal, setBuyCoinModal] = useState(false)
-    const [removeCoinModal, setRemoveCoinModal] = useState(false)
     const [selectedCoin, setSelectedCoin] = useState('')
     const [selectedCoinImgUrl, setSelectedCoinImgUrl] = useState('')
     const [selectedCoinCurrentValue, setSelectedCoinCurrentValue] = useState(0)
@@ -45,7 +44,9 @@ export default function Wallet({ returnedCoins }) {
     const [valueToInvest, setValueToInvest] = useState(0)
     const [coinQuanityPreview, setCoinQuanityPreview] = useState(0)
     const [walletCoins, setWalletCoins] = useState<WalletCoins[]>([])
-    const [totalInvested, setTotalInvested] = useState(0)
+    const [incomes, setIncomes] = useState([])
+
+    //BUY CRYPTO MODAL
 
     function openBuyCoinModal() {
         setBuyCoinModal(true)
@@ -55,7 +56,7 @@ export default function Wallet({ returnedCoins }) {
         setBuyCoinModal(false)
     }
 
-
+    //INPUT CHANGES
 
     function calcPreviewCoinQuantity(coinSymbol) {
         if (coinSymbol === '') {
@@ -75,16 +76,14 @@ export default function Wallet({ returnedCoins }) {
         setCoinQuanityPreview(coinsPreview)
     }
 
-    useEffect(() => {
-        calcPreviewCoinQuantity(selectedCoin)
-    }, [valueToInvest])
+    //CRYPTOS DB
 
-    async function fetchWallet() {
+    async function fetchCryptos() {
         const data = await api.get('/wallet')
-        const { cryptos  } = data.data.data 
-        const sortedCryptos : WalletCoins []= cryptos.sort((a,b) => {
-            if(a.investedValue > b.investedValue) return -1
-            if(a.investedValue < b.investedValue) return 1
+        const { cryptos } = data.data.data
+        const sortedCryptos: WalletCoins[] = cryptos.sort((a, b) => {
+            if (a.investedValue > b.investedValue) return -1
+            if (a.investedValue < b.investedValue) return 1
             return 0
         })
         if (cryptos) setWalletCoins(sortedCryptos)
@@ -97,11 +96,11 @@ export default function Wallet({ returnedCoins }) {
             return
         }
 
-        if(walletCoins.length >= 15){
+        if (walletCoins.length >= 15) {
             toast({
                 title: 'Compra de moeda',
                 description: "Você atingiu o limite máximo de 15 criptomeodas na carteira. Para comprar uma nova criptomoeda remova uma outra criptomoeda da carteira.",
-                status:'warning',
+                status: 'warning',
                 position: 'top',
                 duration: 5000,
                 isClosable: true
@@ -143,9 +142,8 @@ export default function Wallet({ returnedCoins }) {
         )
     }
 
-    useEffect(() => {
-        fetchWallet()
-    }, [walletCoins])
+    //UPDATE CRYPTOS VALUE AND CALC WALLET BRIEFING
+
 
     function getUpdatedCoinValue(coinInWallet: string) {
         const updatedCoinValue = coins.filter(coin => coin.symbol === coinInWallet)
@@ -153,32 +151,37 @@ export default function Wallet({ returnedCoins }) {
     }
 
     function calcIncome(coinInWallet: string) {
-        const upatedValue = Number(getUpdatedCoinValue(coinInWallet))
+        const updatedValue = Number(getUpdatedCoinValue(coinInWallet))
         const filterValues = walletCoins.filter(coin => coin.symbol === coinInWallet)
-        const currentValue = Number(filterValues[0].valueInBuyDate)
-        const difference = Number(upatedValue - currentValue).toFixed(2)
+        const quantityBought = Number(filterValues[0].quantity)
+        const valueInBuyDate = Number(filterValues[0].valueInBuyDate)
+        const difference = Number(Number((updatedValue * quantityBought) - (valueInBuyDate * quantityBought)).toFixed(2))
         return Number(difference)
     }
 
-    function calcTotalInvested() {
-        const total = walletCoins.reduce((acc, coin) => acc * coin.investedValue, 0)
-        console.log(total)
+    const calcTotalInvested = useMemo(() => {
+        const total = walletCoins.reduce((acc, coin) => acc + coin.investedValue, 0)
         return total
-    }
+    }, [walletCoins])
 
-    function calcTotalIncomeDifference() {
-        const totalDifference = walletCoins.reduce((acc, coin) => acc * coin.investedValue, 0)
-        console.log(totalDifference)
-        return totalDifference
-    }
 
-    const coinsValue = walletCoins.map(coin => coin.investedValue)
-    const coinsName = walletCoins.map(coin => coin.symbol)
 
+    useEffect(() => {
+        fetchCryptos()
+    }, [walletCoins])
+
+    useEffect(() => {
+        calcPreviewCoinQuantity(selectedCoin)
+    }, [valueToInvest])
+
+    //CHART DATA
+
+    const coinsChartValue = walletCoins.map(coin => coin.investedValue)
+    const coinsChartName = walletCoins.map(coin => coin.symbol)
 
     var options = {
-        labels: coinsName,
-        series: coinsValue,
+        labels: coinsChartName,
+        series: coinsChartValue,
         chart: {
             width: 320,
             type: 'donut',
@@ -283,28 +286,25 @@ export default function Wallet({ returnedCoins }) {
                             />
                             <VStack
                                 display="flex"
-                                flex-direction="column"
-                                justifyContent="flex-start"
-                                alignItems="flex-start"
-                                width="1080px"
+                                justifyContent="center"
+                                alignItems="center"
+                                width="1200px"
                                 backgroundColor='white'
                                 padding='1rem'
                             >
+
                                 <Text
                                     marginBottom='4px'
                                     fontWeight='500'
+                                    color='gray'
                                 >
-                                    Total investido: {formatCurrency(calcTotalInvested())}
+                                    Total investido: {formatCurrency(calcTotalInvested)}
                                 </Text>
                                 <Text
                                     fontWeight='500'
+                                    color='gray'
                                 >
                                     Total de ativos: {walletCoins.length}/15
-                                </Text>
-                                <Text
-                                    fontWeight='500'
-                                >
-                                    Valor do lucro total: {formatCurrency(calcTotalIncomeDifference())}
                                 </Text>
                                 <Chart
                                     type='donut'

@@ -1,3 +1,5 @@
+import { MdDelete } from "react-icons/md";
+
 import { HStack, Text, VStack } from "@chakra-ui/react";
 
 type AlarmProps = {
@@ -8,8 +10,6 @@ type AlarmProps = {
     isActive: boolean;
     removeAlarm?: () => void;
 }
-
-import { SecondaryButton } from '../SecondaryButton'
 
 export function Alert({
     id,
@@ -22,10 +22,10 @@ export function Alert({
     return (
         <HStack
             display='flex'
-            justifyContent='space-evenly'
-            width="720px"
+            justifyContent='space-between'
+            width="90%"
             bg='white'
-            padding='.32rem'
+            padding=' 0 2.4rem'
             key={id}
         >
             <VStack
@@ -87,10 +87,12 @@ export function Alert({
                     {isActive ? 'Ativado' : 'Desativado'}
                 </Text>
             </VStack>
-            <SecondaryButton
-                label='Remover alarme'
-                action={removeAlarm}
+            <MdDelete
+                onClick={removeAlarm}
+                size={32}
+                style={{cursor: 'pointer'}}
             />
+          
         </HStack>
     )
 }

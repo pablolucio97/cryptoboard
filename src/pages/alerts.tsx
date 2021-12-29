@@ -119,7 +119,6 @@ export default function Alerts({ returnedCoins }) {
             <Flex
                 display="flex"
                 flexDirection='column'
-                alignSelf='center'
                 width="90vw"
                 margin='0 auto 2rem'
                 justifyContent='flex-start'
@@ -130,6 +129,7 @@ export default function Alerts({ returnedCoins }) {
                     display="flex"
                     flexDirection='column'
                     alignItems='flex-start'
+         
                 >
                     <Title
                         content='Alertas'
@@ -141,7 +141,17 @@ export default function Alerts({ returnedCoins }) {
                         session ?
 
                             alarms.length > 0 ?
-                                alarms.map(alarm => (
+                                <HStack
+                                    display="flex"
+                                    flexDirection='column'
+                                    alignItems='flex-start'
+                                    width='1080px'
+                                    height="400px"
+                                    overflowY='scroll'
+                                    borderRadius='4px'
+                                    bg='white'
+                                >
+                                {alarms.map(alarm => (
                                     <Alert
                                         id={alarm.id}
                                         coin={alarm.coin}
@@ -150,14 +160,14 @@ export default function Alerts({ returnedCoins }) {
                                         isActive={alarm.isActive}
                                         removeAlarm={() => removeAlarm(alarm.id)}
                                     />
-                                )) :
+                                    ))}
+                                </HStack>
+                                :
                                 <Box
                                     display="flex"
                                     justifyContent='center'
                                     alignItems='center'
                                     width="900px"
-                                    height="300px"
-                                    bg='white'
                                     padding='1rem'
                                 >
                                     <SubTitle
@@ -185,8 +195,7 @@ export default function Alerts({ returnedCoins }) {
                     display="flex"
                     flexDirection='column'
                     alignItems='flex-start'
-                    width='720px'
-                    padding='.8rem'
+           
                 >
                     <Title
                         content='Alertas'
