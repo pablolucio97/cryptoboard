@@ -13,7 +13,7 @@ export function Footer() {
             color='yellow'
             width='100vw'
             height='240px'
-            padding={['0', '0 4rem', '0 4rem']}
+            padding={['0', '0 2rem 0 0', '0 8rem 0 0','0 8rem 0 0']}
         >
             <Box>
                 <Text

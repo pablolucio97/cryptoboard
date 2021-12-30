@@ -152,42 +152,43 @@ export default function Alerts({ returnedCoins }) {
                                     overflowY='scroll'
                                     borderRadius='4px'
                                     
-                                >
+                                    >
                                 {alarms.map(alarm => (
                                     <Alert
-                                        id={alarm.id}
-                                        coin={alarm.coin}
-                                        iconUrl={alarm.iconUrl}
-                                        targetValue={alarm.targetValue}
-                                        isActive={alarm.isActive}
-                                        removeAlarm={() => removeAlarm(alarm.id)}
+                                    id={alarm.id}
+                                    coin={alarm.coin}
+                                    iconUrl={alarm.iconUrl}
+                                    targetValue={alarm.targetValue}
+                                    isActive={alarm.isActive}
+                                    removeAlarm={() => removeAlarm(alarm.id)}
                                     />
                                     ))}
                                 </HStack>
                                 :
-                                <Box
-                                    display="flex"
-                                    justifyContent='center'
-                                    alignItems='center'
-                                    width="900px"
-                                    padding='1rem'
-                                >
-                                    <SubTitle
-                                        content='Você ainda não adicionou nenhum alarme'
-                                    />
-                                </Box>
-                            :
-                            <Box
+                                <HStack
                                 display="flex"
                                 justifyContent='center'
                                 alignItems='center'
-                                width="900px"
-                                height="300px"
-                                bg='white'
+                                width={['240px', '360px', '480px', '640px']}
+                                height="400px"
                                 padding='1rem'
+                                >
+                                    <SubTitle
+                                        content='Você ainda não adicionou nenhum alerta. Clique em Novo Alerta para criar uma novo alerta.'
+                                        />
+                                </HStack>
+                            :
+                            <Box
+                            display="flex"
+                            justifyContent='center'
+                            alignItems='center'
+                            width={['240px', '360px', '360px', '540px', '900px']}
+                            height="400px"
+                            bg='white'
+                            padding='1rem'
                             >
                                 <SubTitle
-                                    content='Faça login para criar alarmes'
+                                    content='Faça login para criar alertas'
                                 />
                             </Box>
 
