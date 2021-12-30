@@ -27,14 +27,13 @@ export function Header() {
             color='yellow'
             height='64px'
             width='100vw'
-
         >
             <MdMenu 
             onClick={onOpen} 
             size={24}
             style={{
                 cursor: 'pointer',
-                margin: '1.48rem 1rem'
+                margin: '1.48rem 2rem'
 
             }}
             

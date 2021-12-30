@@ -119,11 +119,12 @@ export default function Alerts({ returnedCoins }) {
             <Flex
                 display="flex"
                 flexDirection='column'
-                width="90vw"
+                width={['100vw', '100vw', "90vw", '80vw']}
                 margin='0 auto 2rem'
-                justifyContent='flex-start'
+                justifyContent={['center', 'center', 'center', 'flex-start']}
                 alignItems='center'
-                padding='0 4rem'
+                padding={['0 6rem', '0 4rem','0 4rem']}
+                ml={['-6rem','-4rem','-2rem','-6rem']}
             >
                 <VStack
                     display="flex"
@@ -144,12 +145,13 @@ export default function Alerts({ returnedCoins }) {
                                 <HStack
                                     display="flex"
                                     flexDirection='column'
-                                    alignItems='flex-start'
-                                    width='1080px'
+                                    alignItems='center'
+                                    alignSelf='center'
+                                    margin={['0 auto', '0 auto', '0 auto']}
                                     height="400px"
                                     overflowY='scroll'
                                     borderRadius='4px'
-                                    bg='white'
+                                    
                                 >
                                 {alarms.map(alarm => (
                                     <Alert

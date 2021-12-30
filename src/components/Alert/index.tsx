@@ -22,11 +22,14 @@ export function Alert({
     return (
         <HStack
             display='flex'
+            flexDirection={['column', 'column', 'row']}
             justifyContent='space-between'
-            width="90%"
+            width={['240px', '360px', '360px', '640px']}
             bg='white'
-            padding=' 0 2.4rem'
+            padding={['2rem', '2rem', '0 2.4rem']}
             key={id}
+            borderBottom='1px solid gray'
+            ml='8px'
         >
             <VStack
                 display='flex'

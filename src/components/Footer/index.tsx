@@ -6,24 +6,26 @@ export function Footer() {
     return (
         <Flex
             display='flex'
+            flexDirection={['column', 'column', 'row']}
             backgroundColor='black'
-            justifyContent='space-around'
+            justifyContent={['center', 'space-around', 'space-around']}
             alignItems='center'
             color='yellow'
             width='100vw'
             height='240px'
-            padding='0 4rem'
+            padding={['0', '0 4rem', '0 4rem']}
         >
             <Box>
                 <Text
                     color='white'
-                    fontSize='16px'
-                    >
+                    fontSize={['12px','16px','16px']}
+                    mr={['0', '6rem', '2rem']}
+                >
                     © 2022 CryptoBoard. All rights reserved
                 </Text>
                 <Text
                     color='gray'
-                    fontSize='12px'
+                    fontSize={['8px','12px','12px']}
                     marginTop='-16px'
                 >
                     Desenvolvido por <a href="https://www.linkedin.com/in/pablo-silva-76b521156/">Pablo Silva</a>
