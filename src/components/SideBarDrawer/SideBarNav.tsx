@@ -16,8 +16,7 @@ export function SidebarNav({children} : ChildrenProps){
         <Stack
         align='flex-start'
         backgroundColor='white'
-        width='240px'
-        height='100vh'
+        height='90vh'
     >
         {children}
         <NavSection title='Menu'>

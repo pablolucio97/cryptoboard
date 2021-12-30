@@ -30,7 +30,7 @@ export default function ActiveLink({ shouldMatchExactHref, children, ...rest }: 
     return (
         <Link {...rest}>
             {cloneElement(children, {
-                color: isActive ? 'gray' : 'black'
+                color: isActive ? 'black' : 'black'
             })}
         </Link>
     )

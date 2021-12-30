@@ -1,9 +1,7 @@
 import React, { ReactNode } from "react";
 
 import { Box, Stack } from "@chakra-ui/layout";
-import { Text } from "@chakra-ui/react";
 
-import { PrimaryButton } from "../PrimaryButton";
 import { Title } from "../Title";
 
 interface NavSectionProps {

@@ -10,6 +10,7 @@ export function Logo() {
             fontWeight='500'
             fontSize={18}
             fontFamily='Poppins, sans-serif'
+            ml='-.48rem'
         >
 
             <Box

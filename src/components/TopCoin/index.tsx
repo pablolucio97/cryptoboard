@@ -23,10 +23,11 @@ export function TopCoin({
         <Flex
             key={id}
             display='flex'
+            direction={['column', 'row']}
             justify='space-around'
             alignItems='center'
             width="266px"
-            backgroundColor='white'
+            backgroundColor={['red', 'white']}
             padding="1rem"
             borderRadius="4px"
             margiRight='1rem'

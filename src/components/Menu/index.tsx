@@ -11,17 +11,18 @@ type MenuProps = {
 export function Menu({ children }: MenuProps) {
     return (
         <Flex
-            display='flex'
+            display={['none', 'none', 'none', 'flex']}
+            bg='white'
             width='240px'
             flexDirection='column'
-            bg='white'
-            height='100vh'
+            height='120vh'
         >
             {children}
             <Text
                 fontWeight='700'
                 fontSize='24'
                 margin='2.4rem 2.4rem 0'
+                bg={['red', 'white']}
             >
                 Menu
             </Text>
@@ -29,7 +30,7 @@ export function Menu({ children }: MenuProps) {
                 margin='1.48rem 2.4rem'
                 cursor='pointer'
             >
-                <MdTimeline size={24} style={{marginBottom: '36px', marginRight: '16px'}} />
+                <MdTimeline size={24} style={{ marginBottom: '36px', marginRight: '16px' }} />
                 <Link href='/'>
                     <Text>Mercado</Text>
                 </Link>
@@ -38,7 +39,7 @@ export function Menu({ children }: MenuProps) {
                 margin='.48rem 2.4rem'
                 cursor='pointer'
             >
-                <MdAttachMoney size={24} style={{marginBottom: '36px', marginRight: '16px'}} />
+                <MdAttachMoney size={24} style={{ marginBottom: '36px', marginRight: '16px' }} />
                 <Link href='/wallet'>
                     <Text>Carteira</Text>
                 </Link>
@@ -47,7 +48,7 @@ export function Menu({ children }: MenuProps) {
                 margin='.48rem 2.4rem'
                 cursor='pointer'
             >
-                <MdAddAlert size={24} style={{marginBottom: '36px', marginRight: '16px'}} />
+                <MdAddAlert size={24} style={{ marginBottom: '36px', marginRight: '16px' }} />
                 <Link href='/alerts'>
                     <Text>Alertas</Text>
                 </Link>

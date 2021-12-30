@@ -62,7 +62,9 @@ export function Layout({ children }: LayoutProps) {
                             </Box>
                     }
                 </SideBar>
-                <Menu>
+                <Menu
+                
+                >
                     {
                         session ?
                             <UserCard
