@@ -74,12 +74,12 @@ export default function HomeComponent({ returnedCoins }) {
       <Flex
         display="flex"
         flexDirection='column'
-        alignSelf='center'
-        width="80vw"
-        margin='0 auto 2rem'
+        width={['90vw', '80vw',"80vw", '62vw']}
+        margin={['0 auto 2rem', '0 auto 2rem', '0 -8rem 0 2rem', '0 0 0 4rem']}
         justifyContent='flex-start'
         alignItems='center'
         padding='0 4rem'
+        bg={['red', 'cyan', 'yellow', 'blue']}
       >
         <VStack
           display="flex"
@@ -92,7 +92,11 @@ export default function HomeComponent({ returnedCoins }) {
           <SubTitle
             content="Moedas com maior volume de negociação diária nas últimas 24h"
           />
-          <HStack>
+          <HStack
+            display='flex'
+            flexDirection={['column', 'column', 'column', 'row']}
+           // justifyContent='space-between'
+          >
             {topCoins.map(coin => (
               <TopCoin
                 id={coin.id}
@@ -120,57 +124,13 @@ export default function HomeComponent({ returnedCoins }) {
             backgroundColor='white'
             padding='1rem'
           >
-            <HStack
-              display="flex"
-              alignItems="center"
-              justifyContent="flex-start"
-              width="100%"
-            >
-              <Text
-                color='black'
-                fontWeight='800'
-                textAlign='center'
-                fontSize='.88rem'
-                marginRight='2rem'
-                width='240px'
-              >
-                Moeda
-              </Text>
-              <Text
-                color='black'
-                fontWeight='800'
-                textAlign='center'
-                fontSize='.88rem'
-                width='120px'
-              >
-                Valor
-              </Text>
-              <Text
-                color='black'
-                fontWeight='800'
-                textAlign='center'
-                fontSize='.88rem'
-                width='240px'
-              >
-                Supply
-              </Text>
-              <Text
-                color='black'
-                fontWeight='800'
-                textAlign='center'
-                width='240px'
-                fontSize='.88rem'
-              >
-                MarketCap
-              </Text>
-            </HStack>
+            
             {dailyCoins.map(coin => (
               <DailyCoin
                 id={coin.id}
                 name={coin.name}
                 symbol={coin.symbol}
-                circulatingSupply={coin.circulatingSupply}
-                marketCap={coin.marketCap}
+                history={coin.history}
                 iconUrl={coin.iconUrl}
                 price={coin.price}
               />
@@ -227,13 +187,14 @@ export const getStaticProps: GetStaticProps = async () => {
       volume: coin.volume,
       iconUrl: coin.iconUrl,
       rank: coin.rank,
-      history: coin.history,
+      history: coin.history.slice(13,20),
       marketCap: Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "USD",
       }).format(coin.marketCap),
     };
   });
+
 
 
   return {

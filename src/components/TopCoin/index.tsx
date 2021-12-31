@@ -23,14 +23,15 @@ export function TopCoin({
         <Flex
             key={id}
             display='flex'
-            direction={['column', 'row']}
+            direction={['column', 'column', 'row', 'row']}
             justify='space-around'
             alignItems='center'
-            width="266px"
-            backgroundColor={['red', 'white']}
+            width={["80vw","400px","640px","160px"]}
+            backgroundColor='white'
             padding="1rem"
+           // borderBottom={['1px solid gray', '1px solid gray', 'none']}
             borderRadius="4px"
-            margiRight='1rem'
+            margin={['0 0 1rem .48rem','0 0 1rem .48rem','0 0 1rem .48rem', '0']}
             box-shadow='rgba(10, 10, 10, 0.1) 0px 8px 16px -2px, rgba(10, 10, 10, 0.02) 0px 0px 0px 1px'
         >
             <img
