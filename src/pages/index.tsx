@@ -1,6 +1,6 @@
 import { GetStaticProps } from "next";
 import Head from "next/head";
-import React, { memo, useEffect, useMemo, useState } from "react";
+import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 
 import { Flex, HStack, Text, VStack } from "@chakra-ui/react";
 
@@ -10,7 +10,7 @@ import { SubTitle } from "../components/SubTitle";
 import { Title } from "../components/Title";
 import { TopCoin } from "../components/TopCoin";
 
-  type CoinProps = {
+type CoinProps = {
   id: number;
   symbol: string;
   name: string;
@@ -29,15 +29,15 @@ export default function HomeComponent({ returnedCoins }) {
   const [itemQueryStart, setItemQueryStart] = useState(0)
   const [itemQueryEnd, setItemQueryEnd] = useState(10)
 
-  const sortCoinsByMarketCap = useMemo(() => {
+  const sortCoinsByMarketCap = () => {
     const coins = returnedCoins.sort((minMarketCap, maxMarketCap) => {
       if (minMarketCap.marketCap < maxMarketCap.marketCap) return 1
       if (minMarketCap.marketCap > maxMarketCap.marketCap) return -1
       else return 0
     }).slice(0, 3)
     return coins
-  }, [])
-  
+  }
+
   const sortCoinsByRanking = () => {
     pagination()
     const coins = returnedCoins.sort((minRanking, maxRanking) => {
@@ -48,7 +48,7 @@ export default function HomeComponent({ returnedCoins }) {
     return coins
   }
   const ITEMS_PER_PAGE = 10
-  
+
   const [topCoins, setTopCoins] = useState<CoinProps[]>(sortCoinsByMarketCap)
   const [dailyCoins, setDailyCoins] = useState<CoinProps[]>(sortCoinsByRanking)
 
@@ -60,10 +60,9 @@ export default function HomeComponent({ returnedCoins }) {
     setItemQueryEnd(itemEnd)
   }
 
-  
   useEffect(() => {
     setDailyCoins(sortCoinsByRanking)
-  }, [sortCoinsByRanking, dailyCoins, setDailyCoins])
+  }, [dailyCoins])
 
 
   return (
@@ -74,12 +73,11 @@ export default function HomeComponent({ returnedCoins }) {
       <Flex
         display="flex"
         flexDirection='column'
-        width={['90vw', '80vw',"80vw", '62vw']}
+        width={['64vw', '80vw', "80vw", '62vw']}
         margin={['0 auto 2rem', '0 auto 2rem', '0 -8rem 0 2rem', '0 0 0 4rem']}
         justifyContent='flex-start'
         alignItems='center'
         padding='0 4rem'
-        bg={['red', 'cyan', 'yellow', 'blue']}
       >
         <VStack
           display="flex"
@@ -95,10 +93,14 @@ export default function HomeComponent({ returnedCoins }) {
           <HStack
             display='flex'
             flexDirection={['column', 'column', 'column', 'row']}
-           // justifyContent='space-between'
+            alignItems={['center','center','center','flex-start']}
+            justifyContent={['space-evenly','space-evenly','space-between','flex-start']}
+            padding='.4rem'
+            height={['532px', '532px', '240px', '80px']}
           >
             {topCoins.map(coin => (
               <TopCoin
+                key={coin.id}
                 id={coin.id}
                 name={coin.name}
                 symbol={coin.symbol}
@@ -120,17 +122,28 @@ export default function HomeComponent({ returnedCoins }) {
             content="Preço de criptomoedas hoje"
           />
           <VStack
-            width="880px"
-            backgroundColor='white'
             padding='1rem'
+            bg={['transparent', 'transparent', 'transparent', 'white']}
           >
-            
+            <HStack
+              display={['none', 'none', 'none', 'flex']}
+              width='780px'
+              justifyContent='space-between'
+              padding='0 2rem'
+            >
+              <Text>Moeda</Text>
+              <Text>Preço</Text>
+              <Text>Supply</Text>
+              <Text>MarketCap</Text>
+            </HStack>
             {dailyCoins.map(coin => (
               <DailyCoin
+                key={coin.id}
                 id={coin.id}
                 name={coin.name}
                 symbol={coin.symbol}
-                history={coin.history}
+                circulatingSupply={coin.circulatingSupply}
+                marketCap={coin.marketCap}
                 iconUrl={coin.iconUrl}
                 price={coin.price}
               />
@@ -148,7 +161,7 @@ export default function HomeComponent({ returnedCoins }) {
   )
 }
 
-export const Home = memo(HomeComponent, (prevProps, nextProps) =>{
+export const Home = memo(HomeComponent, (prevProps, nextProps) => {
   return Object.is(prevProps.returnedCoins, nextProps.returnedCoins)
 })
 
@@ -173,7 +186,7 @@ export const getStaticProps: GetStaticProps = async () => {
     return {
       id: coin.id,
       symbol: coin.symbol,
-      name: coin.name.length > 12 ? coin.name.substring(0,12).concat('...') : coin.name,
+      name: coin.name.length > 12 ? coin.name.substring(0, 12).concat('...') : coin.name,
       price: Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "USD",
@@ -187,15 +200,13 @@ export const getStaticProps: GetStaticProps = async () => {
       volume: coin.volume,
       iconUrl: coin.iconUrl,
       rank: coin.rank,
-      history: coin.history.slice(13,20),
+      history: coin.history,
       marketCap: Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "USD",
       }).format(coin.marketCap),
     };
   });
-
-
 
   return {
     props: {

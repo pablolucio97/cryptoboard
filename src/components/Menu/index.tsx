@@ -16,6 +16,7 @@ export function Menu({ children }: MenuProps) {
             width='240px'
             flexDirection='column'
             height='120vh'
+            marginRight='3.2rem'
         >
             {children}
             <Text
