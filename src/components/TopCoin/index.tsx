@@ -32,7 +32,7 @@ export function TopCoin({
             padding="1rem"
            // borderBottom={['1px solid gray', '1px solid gray', 'none']}
             borderRadius="4px"
-            margin={['0 1rem','0 1rem','0','0']}
+            margin={['0 -.48rem 0 0','0 -.48rem 0 0','0 -.48rem 0 0','0']}
             box-shadow='rgba(10, 10, 10, 0.1) 0px 8px 16px -2px, rgba(10, 10, 10, 0.02) 0px 0px 0px 1px'
         >
             <img

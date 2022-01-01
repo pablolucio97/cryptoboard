@@ -1,4 +1,4 @@
-import { Text } from '@chakra-ui/react'
+import { Text } from "@chakra-ui/react";
 
 type SubTitleProps = {
     content: string
@@ -7,7 +7,7 @@ type SubTitleProps = {
 export function SubTitle({ content }: SubTitleProps) {
     return (
         <Text
-            fontSize='1rem'
+        fontSize={['.8rem', '1rem']}
             color='gray'
         >
             {content}

@@ -148,7 +148,7 @@ export default function Alerts({ returnedCoins }) {
                                     alignItems='center'
                                     alignSelf='center'
                                     margin={['0 auto', '0 auto', '0 auto']}
-                                    height="400px"
+                                    maxHeight="400px"
                                     overflowY='scroll'
                                     borderRadius='4px'
                                     
@@ -171,7 +171,11 @@ export default function Alerts({ returnedCoins }) {
                                 alignItems='center'
                                 width={['240px', '360px', '480px', '640px']}
                                 height="400px"
+                                borderRadius='4px'
                                 padding='1rem'
+                                bg='white'
+                                textAlign='center'
+                                
                                 >
                                     <SubTitle
                                         content='Você ainda não adicionou nenhum alerta. Clique em Novo Alerta para criar uma novo alerta.'
