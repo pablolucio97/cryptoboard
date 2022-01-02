@@ -60,9 +60,9 @@ export default function HomeComponent({ returnedCoins }) {
     setItemQueryEnd(itemEnd)
   }
 
-  useEffect(() => {
+/*   useEffect(() => {
     setDailyCoins(sortCoinsByRanking)
-  }, [dailyCoins])
+  }, [dailyCoins]) */
 
 
   return (

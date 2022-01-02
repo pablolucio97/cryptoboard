@@ -33,7 +33,7 @@ const Chart = dynamic(() => import('react-apexcharts'), {
 export default function Wallet({ returnedCoins }) {
 
     const toast = useToast()
-    const session = useSession()
+    const [session] = useSession()
 
     const [buyCoinModal, setBuyCoinModal] = useState(false)
     const [selectedCoin, setSelectedCoin] = useState('')
@@ -188,14 +188,11 @@ export default function Wallet({ returnedCoins }) {
             enabled: false,
         },
         responsive: [{
-            breakpoint: 480,
+            breakpoint: 720,
             options: {
                 chart: {
                     width: 200
                 },
-                legend: {
-                    show: false
-                }
             }
         }],
         legend: {
@@ -214,109 +211,140 @@ export default function Wallet({ returnedCoins }) {
             <Flex
                 display="flex"
                 flexDirection='column'
-                width="90vw"
-                margin='0 auto 2rem'
+                width={['100vw', '100vw', "90vw", '80vw']}
                 justifyContent='flex-start'
-                alignItems='center'
-                padding='0 4rem'
+                margin='0 auto 2rem'
+                alignItems='flex-start'
+                minHeight='80vh'
+                ml={['-4rem', '0', '8rem', '8rem']}
+                padding={['0 6rem', '0 4rem','0 4rem']}
             >
-                <VStack
-                    display="flex"
-                    flexDirection='column'
-                    alignItems='flex-start'
-                    mb='1rem'
-                >
-                    <Title
-                        content="Carteira"
-                    />
-                    <SubTitle
-                        content="Minhas criptomoedas"
-                    />
-                    <WalletComponent>
-                        {
 
-                            walletCoins.length > 0 ?
-                                walletCoins.map(coin => (
-                                    <WalletCoin
-                                        id={coin.id}
-                                        iconUrl={coin.iconUrl}
-                                        symbol={coin.symbol}
-                                        quantity={coin.quantity}
-                                        buyDate={coin.buyDate}
-                                        valueInBuyDate={coin.valueInBuyDate}
-                                        investedValue={coin.investedValue}
-                                        updatedValue={getUpdatedCoinValue(coin.symbol)}
-                                        difference={calcIncome(coin.symbol)}
-                                        removeCrypto={() => removeCrypto(coin.id)}
-                                    />
-                                ))
+                {session ? (
+                    <VStack
+                        display="flex"
+                        flexDirection='column'
+                        alignItems='flex-start'
+                        mb='1rem'
+                    >
+                        <Title
+                            content="Carteira"
+                        />
+                        <SubTitle
+                            content="Minhas criptomoedas"
+                        />
+                        <WalletComponent>
+                            {
 
-                                :
+                                walletCoins.length > 0 ?
+                                    walletCoins.map(coin => (
+                                        <WalletCoin
+                                            id={coin.id}
+                                            iconUrl={coin.iconUrl}
+                                            symbol={coin.symbol}
+                                            quantity={coin.quantity}
+                                            buyDate={coin.buyDate}
+                                            valueInBuyDate={coin.valueInBuyDate}
+                                            investedValue={coin.investedValue}
+                                            updatedValue={getUpdatedCoinValue(coin.symbol)}
+                                            difference={calcIncome(coin.symbol)}
+                                            removeCrypto={() => removeCrypto(coin.id)}
+                                        />
+                                    ))
 
-                                <Box
-                                    marginBottom='8rem'
-                                    height='320px'
-                                    display='flex'
-                                    alignItems='center'
-                                    color='gray'
-                                >
-                                    <Text>Sua carteira ainda está vazia.</Text>
-                                </Box>
+                                    :
 
+                                    <Box
+                                        marginBottom='8rem'
+                                        height='320px'
+                                        display='flex'
+                                        alignItems='center'
+                                        color='gray'
+                                    >
+                                        <Text>Sua carteira está vazia.</Text>
+                                    </Box>
+                            }
+                        </WalletComponent>
+                        <PrimaryButton
+                            label="Adicionar moeda"
+                            action={openBuyCoinModal}
+                            size="md"
+                            disabled={!session}
+                            type="button"
+                        />
+                        <Title
+                            content="Resumo"
+                        />
+                        <SubTitle
+                            content="Informações resumidas da carteira"
+                        />
+                        <VStack
+                            display="flex"
+                            justifyContent="center"
+                            alignItems="center"
+                            width={['240px', '400px', '640px', '900px']}
+                            backgroundColor='white'
+                            padding='1rem'
+                        >
 
-
-                        }
-                    </WalletComponent>
-                    <PrimaryButton
-                        label="Adicionar moeda"
-                        action={openBuyCoinModal}
-                        size="md"
-                        disabled={!session}
-                        type="button"
-                    />
-                    {session ? (
-                        <>
-                            <Title
-                                content="Resumo"
-                            />
-                            <SubTitle
-                                content="Informações resumidas da carteira"
-                            />
-                            <VStack
-                                display="flex"
-                                justifyContent="center"
-                                alignItems="center"
-                                width="1200px"
-                                backgroundColor='white'
-                                padding='1rem'
+                            <Text
+                                marginBottom='4px'
+                                fontWeight='500'
+                                color='gray'
                             >
-
-                                <Text
-                                    marginBottom='4px'
-                                    fontWeight='500'
-                                    color='gray'
-                                >
-                                    Total investido: {formatCurrency(calcTotalInvested)}
-                                </Text>
-                                <Text
-                                    fontWeight='500'
-                                    color='gray'
-                                >
-                                    Total de ativos: {walletCoins.length}/15
-                                </Text>
-                                <Chart
-                                    type='donut'
-                                    //@ts-ignore
-                                    options={options}
-                                    height="300px"
-                                    series={options.series}
-                                />
-                            </VStack>
-                        </>
-                    ) :
-                        <Text>Faça login para ter acesso à sua carteira.</Text>
-                    }
-                </VStack>
+                                Total investido: {formatCurrency(calcTotalInvested)}
+                            </Text>
+                            <Text
+                                fontWeight='500'
+                                color='gray'
+                            >
+                                Total de ativos: {walletCoins.length}/15
+                            </Text>
+                            <Chart
+                                type='donut'
+                                //@ts-ignore
+                                options={options}
+                               
+                                series={options.series}
+                            />
+                        </VStack>
+                    </VStack>
+                ) :
+                    <VStack
+                        display="flex"
+                        flexDirection='column'
+                        alignItems='flex-start'
+                        mb='1rem'
+                        width={['90vw']}
+                        bg='red'
+                    >
+                        <Title
+                            content="Carteira"
+                        />
+                        <SubTitle
+                            content="Minhas criptomoedas"
+                        />
+                        <Box
+                            display="flex"
+                            justifyContent='center'
+                            alignItems='center'
+                            width={['90vw', '360px', '400px',  '640px']}
+                            height="400px"
+                            bg='white'
+                            padding='1rem'
+                        >
+                            <SubTitle
+                                content='Faça login para adicionar moedas.'
+                            />
+                        </Box>
+                        <PrimaryButton
+                            label='Adicionar moeda'
+                            disabled={!session}
+                            action={() => buyCrypto}
+                            type='submit'
+                        />
+                    </VStack>
+                }
                 <Modal
                     isOpen={buyCoinModal}
                     onRequestClose={closeBuyCoinModal}

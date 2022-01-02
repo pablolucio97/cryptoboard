@@ -14,14 +14,18 @@ export function WalletComponent({ children }: WalletProps) {
         <>
 
             <VStack
-                width="1200px"
-                backgroundColor='white'
-                padding='1rem'
+                display="flex"
+                justifyContent='flex-start'
+                alignItems='flex-start'
+                width={['90vw', '440px', '640px', '1080px']}
+                padding={['0', '0', '1rem', '1rem']}
                 height="400px"
+                bg={['transparent', 'transparent','transparent', 'white']}
                 overflowY='scroll'
+                overflowX='hidden'
             >
                 <HStack
-                    display="flex"
+                    display={['none', 'none', 'none', 'flex']}
                     justifyContent="flex-start"
                     alignItems="center"
                     width="100%"

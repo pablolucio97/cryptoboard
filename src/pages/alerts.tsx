@@ -125,6 +125,7 @@ export default function Alerts({ returnedCoins }) {
                 alignItems='center'
                 padding={['0 6rem', '0 4rem','0 4rem']}
                 ml={['-6rem','-4rem','-2rem','-6rem']}
+                minHeight='80vh'
             >
                 <VStack
                     display="flex"

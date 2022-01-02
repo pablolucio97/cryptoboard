@@ -21,10 +21,12 @@ export function WalletCoin({
         <Flex
             display='flex'
             key={id}
-            justify='flex-start'
-            alignItems='center'
-            width="96%"
-            padding=".24rem"
+            flexDirection={['column', 'column', 'column', 'row']}
+            justifyContent={['center', 'center', 'center', 'flex-start']}
+            alignItems={['center', 'center', 'center', 'flex-start']}
+            width={["240px", "420px", "640px", "1040px"]}
+            padding="1rem"
+            bg='white'
             borderRadius="4px"
             marginRight='1rem'
             box-shadow='rgba(10, 10, 10, 0.1) 0px 8px 16px -2px, rgba(10, 10, 10, 0.02) 0px 0px 0px 1px'
@@ -33,27 +35,26 @@ export function WalletCoin({
                 src={iconUrl}
                 alt="Cryptoboard"
                 width="24" height="24"
-          
             />
             <Text
-                marginLeft="8px"
+                marginLeft={['0', '0', '0', "8px"]}
                 fontWeight='bold'
                 fontSize=".88rem"
-                width='120px'
+                width={['','','','120px']}
                 textAlign='start'
-                >
+            >
                 {symbol}
             </Text>
             <Text
-                marginLeft="-24px"
+                marginLeft={['0', '0', '0', "-24px"]}
                 fontSize=".88rem"
-                width='144px'
+                width={['','','','144px']}
                 textAlign='start'
             >
                 {formatCrypto(quantity)}
             </Text>
             <Text
-                width='180px'
+                width={['','','','180px']}
                 textAlign='start'
                 fontSize=".88rem"
             >
@@ -61,32 +62,32 @@ export function WalletCoin({
             </Text>
             <Text
                 fontSize=".88rem"
-                width='140px'
+                width={['','','','140px']}
                 textAlign='start'
-                marginLeft="32px"
+                marginLeft={['0', '0', '0', "32px"]}
             >
                 {buyDate}
 
             </Text>
             <Text
                 fontSize=".88rem"
-                width='180px'
+                width={['','','','180px']}
                 textAlign='center'
-                marginLeft="12px"
+                marginLeft={['0', '0', '0', "12px"]}
             >
                 {formatCurrency(investedValue)}
             </Text>
             <Text
-                width='120px'
-                marginLeft="64px"
+                width={['','','','120px']}
+                marginLeft={['0', '0', '0', "64px"]}
                 textAlign='start'
                 fontSize=".88rem"
             >
                 {formatCurrency(updatedValue)}
             </Text>
             <Text
-                width='120px'
-                marginLeft="44px"
+                width={['','','','120px']}
+                marginLeft={['0', '0', '0', "44px"]}
                 textAlign='start'
                 fontSize=".88rem"
             >
